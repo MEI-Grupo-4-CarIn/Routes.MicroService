@@ -1,0 +1,37 @@
+{
+	"info": {
+		"_postman_id": "0fb72b1a-6dbb-449f-9fbc-28684b5c17e7",
+		"name": "Routes.MicroService",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "13807037"
+	},
+	"item": [
+		{
+			"name": "CreateRoute",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"userId\": \"123456\", // should exist on Auth.MicroService\n    \"vehicleId\": \"654321\", // should exist on Vehicles.MicroService\n    \"startPoint\": {\n        \"city\": \"Braga\",\n        \"country\": \"Portugal\"\n    },\n    \"endPoint\": {\n        \"city\": \"Porto\",\n        \"country\": \"Portugal\"\n    },\n    \"startDate\": \"2024-12-01\",\n    \"status\": \"pending\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{routes-microservice-url}}api/routes/create",
+					"host": [
+						"{{routes-microservice-url}}api"
+					],
+					"path": [
+						"routes",
+						"create"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
