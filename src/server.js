@@ -1,10 +1,9 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const app = express();
-const port = 3000;
-const vehicleRoute = require('./interface_adapters/routes/routeRoute');
-
-require('dotenv').config();
+const port = 3001;
+require('dotenv').config({ path: __dirname + '/.env' });
+const routeRoute = require('./interface_adapters/routes/routeRoute'); 
 
 const uri = process.env.MONGO_URI;
 mongoose.Promise = global.Promise;
@@ -18,5 +17,5 @@ app.use(express.json());
 app.use('/api', routeRoute);
 
 app.listen(port, () => {
- console.log(`Routes.MicroService listening at http://localhost:${port}`);
+    console.log(`Routes.MicroService listening at http://localhost:${port}`);
 });
