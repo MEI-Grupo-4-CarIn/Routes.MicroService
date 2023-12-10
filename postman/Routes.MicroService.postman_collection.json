@@ -1,9 +1,9 @@
 {
 	"info": {
-		"_postman_id": "0fb72b1a-6dbb-449f-9fbc-28684b5c17e7",
+		"_postman_id": "e9f06b46-cfd1-49d2-aa65-074aebbee915",
 		"name": "Routes.MicroService",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-		"_exporter_id": "13807037"
+		"_exporter_id": "30943250"
 	},
 	"item": [
 		{
@@ -28,6 +28,78 @@
 					"path": [
 						"routes",
 						"create"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "UpdateRoute",
+			"request": {
+				"method": "PATCH",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"status\": \"cancelled\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{routes-microservice-url}}api/routes/update/65758b4994d038472adc9d02",
+					"host": [
+						"{{routes-microservice-url}}api"
+					],
+					"path": [
+						"routes",
+						"update",
+						"65758b4994d038472adc9d02"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "GetAllRoutes",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{routes-microservice-url}}/routes",
+					"host": [
+						"{{routes-microservice-url}}"
+					],
+					"path": [
+						"routes"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "GetById",
+			"request": {
+				"method": "GET",
+				"header": []
+			},
+			"response": []
+		},
+		{
+			"name": "DeleteRoute",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "{{routes-microservice-url}}api/routes/delete/65758b4994d038472adc9d02",
+					"host": [
+						"{{routes-microservice-url}}api"
+					],
+					"path": [
+						"routes",
+						"delete",
+						"65758b4994d038472adc9d02"
 					]
 				}
 			},
