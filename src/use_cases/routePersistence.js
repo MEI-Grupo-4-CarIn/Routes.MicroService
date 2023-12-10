@@ -41,6 +41,52 @@ class RoutePersistence {
 
         return this.routeRepository.create(routeEntity);
     }
+
+    async update(id, updatedRouteData) {
+        const existingRouteData = await this.routeRepository.getById(id);
+        if (!existingRouteData) {
+            throw new NotFoundError('Route not found.');
+        }
+    
+        const mergedRouteData = { ...existingRouteData, ...updatedRouteData };
+        const route = new RouteEntity(mergedRouteData);
+    
+        const validation = await route.validator();
+        if (!validation.isValid) {
+            throw new Error(validation.errors.join('\n'));
+        }
+    
+        return this.routeRepository.update(id, route);
+    }
+
+    
+    async getById(id) {
+        const route = await this.routeRepository.getById(id);
+        if (!route) {
+            throw new NotFoundError('Route not found.');
+        }
+        
+        return route;
+    }
+
+    async getAllRoutes() {
+        try {
+            const allRoutes = await this.routeRepository.getAll();
+            return allRoutes;
+        } catch (error) {
+            throw new Error(`Error getting all routes: ${error.message}`);
+        }
+    }
+    
+    async delete(id) {
+        const existingRouteData = await this.routeRepository.getById(id);
+        if (!existingRouteData) {
+            throw new NotFoundError('Rota não encontrada.');
+        }
+    
+        await this.routeRepository.delete(id);
+    }
+    
 }
 
 module.exports = RoutePersistence;
