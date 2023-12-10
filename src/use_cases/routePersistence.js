@@ -3,6 +3,7 @@ const routeSchema = require('../validators/routeValidator');
 const RouteRepository = require('../repositories/routeRepository');
 const GeocodingService = require('../frameworks/geocodingService');
 const RouteCalculationService = require('../frameworks/routeCalculationService');
+const VehicleService = require('../frameworks/vehicleService');
 const NotFoundError = require('../utils/notFoundError');
 
 class RoutePersistence {
@@ -10,13 +11,21 @@ class RoutePersistence {
         this.routeRepository = new RouteRepository();
         this.geocodingService = new GeocodingService();
         this.routeCalculationService = new RouteCalculationService();
+        this.vehicleService = new VehicleService();
     }
 
     async create(routeData) {
         // Validate the data
         const { error } = routeSchema.validate(routeData);
         if (error) {
-            throw new Error(`Invalid route data: ${error.details[0].message}`);
+            throw new Error(`Invalid route data: ${error.details[0].message}.`);
+        }
+
+        // Check if vehicle exists
+        try {
+            await this.vehicleService.checkVehicleExists(routeData.vehicleId);
+        } catch (error) {
+            throw new Error(error.message);
         }
 
         // Get coordinates using the geocoding service
