@@ -22,11 +22,7 @@ class RoutePersistence {
         }
 
         // Check if vehicle exists
-        try {
-            await this.vehicleService.checkVehicleExists(routeData.vehicleId);
-        } catch (error) {
-            throw new Error(error.message);
-        }
+        await this._checkVehicleExistsAsync(routeData.vehicleId);
 
         // Get coordinates using the geocoding service
         const startPointCoordinates = await this.geocodingService.getCoordinates(`${routeData.startPoint.city}, ${routeData.startPoint.country}`);
@@ -96,6 +92,13 @@ class RoutePersistence {
         await this.routeRepository.delete(id);
     }
     
+    async _checkVehicleExistsAsync(vehicleId) {
+        try {
+            await this.vehicleService.checkVehicleExists(routeData.vehicleId);
+        } catch (error) {
+            throw new Error(error.message);
+        }
+    }
 }
 
 module.exports = RoutePersistence;
