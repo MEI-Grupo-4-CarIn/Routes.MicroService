@@ -14,11 +14,8 @@ class GeocodingService {
                     api_key: this.apiKey
                 }
             });
-            const coordinates = response.data.features[0].geometry.coordinates;
-            return {
-                lon: coordinates[0],
-                lat: coordinates[1]
-            };
+            
+            return response.data.features[0].geometry.coordinates;
         } catch (error) {
             console.error('Error getting coordinates:', error);
             throw error;

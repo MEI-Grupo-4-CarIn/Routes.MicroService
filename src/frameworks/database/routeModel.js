@@ -2,7 +2,8 @@ const mongoose = require('mongoose');
 
 const LocationSchema = new mongoose.Schema({
     city: { type: String, required: true },
-    country: { type: String, required: true }
+    country: { type: String, required: true },
+    coordinates: { type: [Number], required: true }
 }, { _id: false });
 
 const RouteSchema = new mongoose.Schema({
@@ -18,6 +19,8 @@ const RouteSchema = new mongoose.Schema({
         enum: ['pending', 'inProgress', 'completed', 'cancelled'],
         default: 'pending'
     },
+    avoidTolls: { type: Boolean, required: true },
+    avoidHighways: { type: Boolean, required: true },
     createdAt: { type: Date, default: Date.now },
     updatedAt: { type: Date, default: Date.now }
 });

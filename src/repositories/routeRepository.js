@@ -2,7 +2,8 @@ const RouteModel = require('../frameworks/database/routeModel');
 
 class RouteRepository {
     async getById(id) {
-        return await RouteModel.findById(id);
+        const document = await RouteModel.findById(id);
+        return document ? document.toObject() : null;
     }
 
     async create(route) {
