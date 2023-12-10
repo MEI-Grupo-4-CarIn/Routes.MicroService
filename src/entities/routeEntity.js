@@ -14,7 +14,9 @@ exports.RouteEntity = class RouteEntity {
             'startDate',
             'distance',
             'duration',
-            'status'];
+            'status',
+            'avoidTolls',
+            'avoidHighways'];
     }
 
     async validator() {
@@ -27,11 +29,15 @@ exports.RouteEntity = class RouteEntity {
             }
         }
 
-        if (typeof this.startPoint.city !== 'string' || typeof this.startPoint.country !== 'string') {
-            errors.push('Invalid startPoint. City and country are required.');
+        if (typeof this.startPoint.city !== 'string' || typeof this.startPoint.country !== 'string' ||
+            !Array.isArray(this.startPoint.coordinates) || this.startPoint.coordinates.length !== 2 ||
+            !this.startPoint.coordinates.every(Number.isFinite)) {
+            errors.push('Invalid startPoint. City, country, and coordinates (as an array of two numbers) are required.');
         }
-        if (typeof this.endPoint.city !== 'string' || typeof this.endPoint.country !== 'string') {
-            errors.push('Invalid endPoint. City and country are required.');
+        if (typeof this.endPoint.city !== 'string' || typeof this.endPoint.country !== 'string' ||
+            !Array.isArray(this.endPoint.coordinates) || this.endPoint.coordinates.length !== 2 ||
+            !this.endPoint.coordinates.every(Number.isFinite)) {
+            errors.push('Invalid endPoint. City, country, and coordinates (as an array of two numbers) are required.');
         }
 
         return {

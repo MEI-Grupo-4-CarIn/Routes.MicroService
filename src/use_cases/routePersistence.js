@@ -1,5 +1,5 @@
 const { RouteEntity } = require('../entities/routeEntity');
-const routeSchema = require('../validators/routeValidator');
+const RouteValidator = require('../validators/routeValidator');
 const RouteRepository = require('../repositories/routeRepository');
 const GeocodingService = require('../frameworks/geocodingService');
 const RouteCalculationService = require('../frameworks/routeCalculationService');
@@ -16,7 +16,7 @@ class RoutePersistence {
 
     async create(routeData) {
         // Validate the data
-        const { error } = routeSchema.validate(routeData);
+        const { error } = RouteValidator.validateCreate(routeData);
         if (error) {
             throw new Error(`Invalid route data: ${error.details[0].message}.`);
         }
@@ -25,15 +25,19 @@ class RoutePersistence {
         await this._checkVehicleExistsAsync(routeData.vehicleId);
 
         // Get coordinates using the geocoding service
-        const startPointCoordinates = await this.geocodingService.getCoordinates(`${routeData.startPoint.city}, ${routeData.startPoint.country}`);
-        const endPointCoordinates = await this.geocodingService.getCoordinates(`${routeData.endPoint.city}, ${routeData.endPoint.country}`);
+        routeData.startPoint.coordinates = await this.geocodingService.getCoordinates(`${routeData.startPoint.city}, ${routeData.startPoint.country}`);
+        routeData.endPoint.coordinates = await this.geocodingService.getCoordinates(`${routeData.endPoint.city}, ${routeData.endPoint.country}`);
 
         // Calculate route using the route calculation service
         const routeOptions = {
             avoidTolls: routeData.avoidTolls,
             avoidHighways: routeData.avoidHighways
         };
-        const route = await this.routeCalculationService.calculateRoute(startPointCoordinates, endPointCoordinates, routeOptions);
+        const route = await this.routeCalculationService.calculateRoute(
+            routeData.startPoint.coordinates,
+            routeData.endPoint.coordinates,
+            routeOptions);
+
         routeData.distance = route.distance;
         routeData.duration = route.duration;
 
@@ -48,9 +52,34 @@ class RoutePersistence {
     }
 
     async update(id, updatedRouteData) {
+        // Validate the data
+        const { error } = RouteValidator.validateUpdate(updatedRouteData);
+        if (error) {
+            throw new Error(`Invalid route data: ${error.details[0].message}.`);
+        }
+
         const existingRouteData = await this.routeRepository.getById(id);
         if (!existingRouteData) {
             throw new NotFoundError('Route not found.');
+        }
+
+        if (updatedRouteData.vehicleId) {
+            // Check if vehicle exists
+            await this._checkVehicleExistsAsync(routeData.vehicleId);
+        }
+        if (updatedRouteData.avoidTolls !== undefined || updatedRouteData.avoidHighways !== undefined) {
+            // Recalculate route using the route calculation service
+            const routeOptions = {
+                avoidTolls: updatedRouteData.avoidTolls ?? existingRouteData.avoidTolls,
+                avoidHighways: updatedRouteData.avoidHighways ?? existingRouteData.avoidHighways
+            };
+            const route = await this.routeCalculationService.calculateRoute(
+                existingRouteData.startPoint.coordinates,
+                existingRouteData.endPoint.coordinates,
+                routeOptions);
+
+            updatedRouteData.distance = route.distance;
+            updatedRouteData.duration = route.duration;
         }
     
         const mergedRouteData = { ...existingRouteData, ...updatedRouteData };
@@ -94,7 +123,7 @@ class RoutePersistence {
     
     async _checkVehicleExistsAsync(vehicleId) {
         try {
-            await this.vehicleService.checkVehicleExists(routeData.vehicleId);
+            await this.vehicleService.checkVehicleExists(vehicleId);
         } catch (error) {
             throw new Error(error.message);
         }

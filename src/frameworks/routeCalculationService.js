@@ -9,10 +9,7 @@ class RouteCalculationService {
     async calculateRoute(startPointCoordinates, endPointCoordinates, routeOptions) {
         try {
             const body = {
-                coordinates: [
-                    [startPointCoordinates.lon, startPointCoordinates.lat],
-                    [endPointCoordinates.lon, endPointCoordinates.lat]
-                ],
+                coordinates: [startPointCoordinates, endPointCoordinates],
                 instructions: "false",
                 options: {
                     avoid_features: [
