@@ -1,4 +1,5 @@
 const express = require('express');
+const authMiddleware = require('../../middlewares/authMiddleware');
 const RouteController = require('../controllers/routeController');
 
 const router = express.Router();
@@ -90,7 +91,7 @@ const routeController = new RouteController();
  *       400:
  *         description: Error creating the route.
  */
-router.post('/routes/create', (req, res) => routeController.createRoute(req, res));
+router.post('/routes/create', authMiddleware(['Admin', 'Manager']), (req, res) => routeController.createRoute(req, res));
 
 /**
  * @swagger
@@ -120,7 +121,7 @@ router.post('/routes/create', (req, res) => routeController.createRoute(req, res
  *       400:
  *         description: Error updating the route.
  */
-router.patch('/routes/update/:id', (req, res) => routeController.updateRoute(req, res));
+router.patch('/routes/update/:id', authMiddleware(['Admin', 'Manager']), (req, res) => routeController.updateRoute(req, res));
 
 /**
  * @swagger
@@ -145,7 +146,7 @@ router.patch('/routes/update/:id', (req, res) => routeController.updateRoute(req
  *       400:
  *         description: Error obtaining the route.
  */
-router.get('/routes/:id', (req, res) => routeController.getById(req, res));
+router.get('/routes/:id', authMiddleware(['Admin', 'Manager', 'Driver']), (req, res) => routeController.getById(req, res));
 
 /**
  * @swagger
@@ -158,7 +159,7 @@ router.get('/routes/:id', (req, res) => routeController.getById(req, res));
  *       200:
  *         description: Routes obtained successfully.
  */
-router.get('/routes', (req, res) => routeController.getAllRoutes(req, res));
+router.get('/routes', authMiddleware(['Admin', 'Manager']), (req, res) => routeController.getAllRoutes(req, res));
 
 /**
  * @swagger
@@ -181,6 +182,6 @@ router.get('/routes', (req, res) => routeController.getAllRoutes(req, res));
  *       400:
  *         description: Error deleting the route.
  */
-router.delete('/routes/delete/:id', (req, res) => routeController.deleteRoute(req, res));
+router.delete('/routes/delete/:id', authMiddleware(['Admin', 'Manager']), (req, res) => routeController.deleteRoute(req, res));
 
 module.exports = router;

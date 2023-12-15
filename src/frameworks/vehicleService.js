@@ -1,4 +1,5 @@
 const axios = require('axios');
+const { generateJwt } = require('../utils/serviceJwtProvider');
 
 class VehicleService {
     constructor() {
@@ -6,8 +7,16 @@ class VehicleService {
     }
 
     async checkVehicleExists(vehicleId) {
+        // Generate a JWT with the JWT payload
+        const payload = { service: 'Routes.MicroService' };
+        const token = generateJwt(payload);
+
         try {
-            const response = await axios.get(`${this.apiUrl}api/vehicles/${vehicleId}`);
+            const response = await axios.get(`${this.apiUrl}api/vehicles/${vehicleId}`, {
+                headers: {
+                    'Service-Authorization': `Bearer ${token}`
+                }
+            });
             return response.status === 200;
         } catch (error) {
             if (error.response) {

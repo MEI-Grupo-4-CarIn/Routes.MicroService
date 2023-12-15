@@ -94,12 +94,17 @@ class RoutePersistence {
     }
 
     
-    async getById(id) {
+    async getById(id, user) {
         const route = await this.routeRepository.getById(id);
         if (!route) {
             throw new NotFoundError('Route not found.');
         }
         
+        if (user['http://schemas.microsoft.com/ws/2008/06/identity/claims/role'] === 'Driver'
+            && user.id !== route.userId) {
+            throw new Error('You do not have permission to access this route.');
+        }
+
         return route;
     }
 
