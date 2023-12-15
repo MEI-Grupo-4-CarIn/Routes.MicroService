@@ -98,9 +98,104 @@ describe('RoutePersistence', () => {
 
             await expect(routePersistence.create(invalidRouteData)).rejects.toThrow();
         });
-
-        // ... other tests for other cases
     });
 
-    // ... other tests for other methods
+    describe('update', () => {
+        it('should update a route successfully', async () => {
+            const mockRouteRepository = new RouteRepository();
+
+            const existingRouteData = {
+                "_id": "6575ea5862568a45931aee8d",
+                "userId": "5",
+                "vehicleId": "6575972b0e7beb961ae509e9",
+                "startPoint": {
+                    "city": "Braga",
+                    "country": "Portugal",
+                    "coordinates": [-8.415415, 41.550782]
+                },
+                "endPoint": {
+                    "city": "Porto",
+                    "country": "Portugal",
+                    "coordinates": [-8.614032, 41.16106]
+                },
+                "startDate": "2024-12-01T00:00:00.000Z",
+                "distance": 55.956,
+                "duration": 2672.3,
+                "status": "pending",
+                "avoidTolls": false,
+                "avoidHighways": false,
+                "createdAt": "2023-12-10T16:42:00.318Z",
+                "updatedAt": "2023-12-10T16:42:00.318Z",
+                "__v": 0
+            };
+            mockRouteRepository.getById = jest.fn().mockResolvedValue(existingRouteData);
+
+            const updatedRouteData = {
+                "_id": "6575ea5862568a45931aee8d",
+                "userId": "5",
+                "vehicleId": "6575972b0e7beb961ae509e9",
+                "startPoint": {
+                    "city": "Braga",
+                    "country": "Portugal",
+                    "coordinates": [-8.415415, 41.550782]
+                },
+                "endPoint": {
+                    "city": "Porto",
+                    "country": "Portugal",
+                    "coordinates": [-8.614032, 41.16106]
+                },
+                "startDate": "2024-12-01T00:00:00.000Z",
+                "distance": 55.956,
+                "duration": 2672.3,
+                "status": "completed",
+                "avoidTolls": false,
+                "avoidHighways": false,
+                "createdAt": "2023-12-10T16:42:00.318Z",
+                "updatedAt": "2023-12-10T16:42:00.318Z",
+                "__v": 0
+            };
+            mockRouteRepository.update = jest.fn().mockResolvedValue(updatedRouteData);
+
+            const mockVehicleService = new VehicleService();
+            mockVehicleService.checkVehicleExists = jest.fn().mockResolvedValue();
+
+            const mockRouteCalculationService = new RouteCalculationService();
+            const mockRouteCalculationData = {
+                distance: 55.956,
+                duration: 2672.3
+            };
+            mockRouteCalculationService.calculateRoute = jest.fn().mockResolvedValue(mockRouteCalculationData);
+
+            const mockGeocodingService = new GeocodingService();
+            mockGeocodingService.getCoordinates = jest.fn().mockResolvedValue([-8.415415, 41.550782]);
+
+            const routePersistence = new RoutePersistence();
+            routePersistence.routeRepository = mockRouteRepository;
+            routePersistence.vehicleService = mockVehicleService;
+            routePersistence.routeCalculationService = mockRouteCalculationService;
+            routePersistence.geocodingService = mockGeocodingService;
+
+            const routeDataForUpdate = {
+                "status": "completed"
+            };
+
+            const route = await routePersistence.update("6575ea5862568a45931aee8d", routeDataForUpdate);
+            expect(route).toEqual(updatedRouteData);
+        });
+
+        it('should throw an error if the route data is invalid', async () => {
+            const routePersistence = new RoutePersistence();
+
+            const invalidRouteData = {
+                "status": "unknown", // invalid status
+                "endPoint": { // not allowed object for update
+                    "city": "Lisboa",
+                    "country": "Portugal",
+                    "coordinates": [-8.614032, 41.16106]
+                },
+            };
+
+            await expect(routePersistence.update("6575ea5862568a45931aee8d", invalidRouteData)).rejects.toThrow();
+        });
+    });
 });
