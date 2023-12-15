@@ -28,7 +28,8 @@ class RouteController {
     async getById(req, res) {
         try {
             const { id } = req.params;
-            const route = await this.routePersistence.getById(id);
+            const user = req.user;
+            const route = await this.routePersistence.getById(id, user);
             res.status(200).json(route);
         } catch (error) {
             if (error instanceof NotFoundError) {
