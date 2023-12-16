@@ -2,9 +2,17 @@ const express = require('express');
 const mongoose = require('mongoose');
 const swaggerUI = require('swagger-ui-express');
 const swaggerSpec = require('./swagger');
+const fs = require('fs');
+const path = require('path');
 const app = express();
+
 const port = 3001;
-require('dotenv').config({ path: __dirname + '/.env' });
+
+const envPath = path.join(__dirname, '.env');
+if (fs.existsSync(envPath)) {
+    require('dotenv').config({ path: envPath });
+}
+
 const routeRoute = require('./interface_adapters/routes/routeRoute'); 
 
 const uri = process.env.MONGO_URI;
