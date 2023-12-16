@@ -47,7 +47,9 @@ The following environment variables are used in this project:
 - `OPENROUTESERVICE_API_URL`: The base URL of the OpenRouteService API.
 - `OPENROUTESERVICE_API_KEY`: Your OpenRouteService API key.
 - `VEHICLE_MICROSERVICE_API_URL`: The base URL of the Vehicle.MicroService.
-- `JWT_PUBLIC_KEY`: The public key used for JWT authentication.
+- `AUTH_MICROSERVICE_API_URL`: The base URL of the Auth.MicroService.
+- `JWT_PUBLIC_KEY`: The public key used for JWT authentication, used to read user's authentication.
+- `SERVICE_SECRET_KEY`: The secret key fot service-to-service JWT authentication.
 
 Remember not to commit the `.env` file to the repository. This file is included in the `.gitignore` file to prevent it from being accidentally committed.
 

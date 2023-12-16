@@ -1,11 +1,13 @@
 const RoutePersistence = require('../src/use_cases/routePersistence');
 const RouteRepository = require('../src/repositories/routeRepository');
 const VehicleService = require('../src/frameworks/vehicleService');
+const UserService = require('../src/frameworks/userService');
 const RouteCalculationService = require('../src/frameworks/routeCalculationService');
 const GeocodingService = require('../src/frameworks/geocodingService');
 
 jest.mock('../src/repositories/routeRepository');
 jest.mock('../src/frameworks/vehicleService');
+jest.mock('../src/frameworks/userService');
 jest.mock('../src/frameworks/routeCalculationService');
 jest.mock('../src/frameworks/geocodingService');
 
@@ -38,6 +40,9 @@ describe('RoutePersistence', () => {
                 "__v": 0
             };
             mockRouteRepository.create = jest.fn().mockResolvedValue(mockRouteData);
+
+            const mockUserService = new UserService();
+            mockUserService.checkUserExists = jest.fn().mockResolvedValue();
 
             const mockVehicleService = new VehicleService();
             mockVehicleService.checkVehicleExists = jest.fn().mockResolvedValue();
@@ -155,6 +160,9 @@ describe('RoutePersistence', () => {
                 "__v": 0
             };
             mockRouteRepository.update = jest.fn().mockResolvedValue(updatedRouteData);
+
+            const mockUserService = new UserService();
+            mockUserService.checkUserExists = jest.fn().mockResolvedValue();
 
             const mockVehicleService = new VehicleService();
             mockVehicleService.checkVehicleExists = jest.fn().mockResolvedValue();

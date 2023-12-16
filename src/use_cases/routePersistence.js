@@ -4,6 +4,7 @@ const RouteRepository = require('../repositories/routeRepository');
 const GeocodingService = require('../frameworks/geocodingService');
 const RouteCalculationService = require('../frameworks/routeCalculationService');
 const VehicleService = require('../frameworks/vehicleService');
+const UserService = require('../frameworks/userService');
 const NotFoundError = require('../utils/notFoundError');
 
 class RoutePersistence {
@@ -12,6 +13,7 @@ class RoutePersistence {
         this.geocodingService = new GeocodingService();
         this.routeCalculationService = new RouteCalculationService();
         this.vehicleService = new VehicleService();
+        this.userService = new UserService();
     }
 
     async create(routeData) {
@@ -20,6 +22,9 @@ class RoutePersistence {
         if (error) {
             throw new Error(`Invalid route data: ${error.details[0].message}.`);
         }
+
+        // Check if user exists
+        await this._checkUserExistsAsync(routeData.userId);
 
         // Check if vehicle exists
         await this._checkVehicleExistsAsync(routeData.vehicleId);
@@ -129,6 +134,14 @@ class RoutePersistence {
     async _checkVehicleExistsAsync(vehicleId) {
         try {
             await this.vehicleService.checkVehicleExists(vehicleId);
+        } catch (error) {
+            throw new Error(error.message);
+        }
+    }
+
+    async _checkUserExistsAsync(userId) {
+        try {
+            await this.userService.checkUserExists(userId);
         } catch (error) {
             throw new Error(error.message);
         }

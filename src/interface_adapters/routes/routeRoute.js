@@ -76,7 +76,7 @@ const routeController = new RouteController();
  *   post:
  *     tags:
  *       - Routes
- *     summary:
+ *     summary: Create new route.
  *     parameters:
  *       - in: body
  *         name: body
@@ -99,7 +99,7 @@ router.post('/routes/create', authMiddleware(['Admin', 'Manager']), (req, res) =
  *   patch:
  *     tags:
  *       - Routes
- *     summary:
+ *     summary: Update an existing route by id.
  *     parameters:
  *       - in: path
  *         name: id
@@ -129,7 +129,7 @@ router.patch('/routes/update/:id', authMiddleware(['Admin', 'Manager']), (req, r
  *   get:
  *     tags:
  *       - Routes
- *     summary:
+ *     summary: Get an existing route by id.
  *     parameters:
  *       - in: path
  *         name: id
@@ -154,7 +154,7 @@ router.get('/routes/:id', authMiddleware(['Admin', 'Manager', 'Driver']), (req, 
  *   get:
  *     tags:
  *       - Routes
- *     summary:
+ *     summary: Get all existing routes.
  *     responses:
  *       200:
  *         description: Routes obtained successfully.
@@ -167,7 +167,7 @@ router.get('/routes', authMiddleware(['Admin', 'Manager']), (req, res) => routeC
  *   delete:
  *     tags:
  *       - Routes
- *     summary:
+ *     summary: Delete and existing route by id.
  *     parameters:
  *       - in: path
  *         name: id
