@@ -12,7 +12,7 @@ class UserService {
         const token = generateJwt(payload);
 
         try {
-            const response = await axios.get(`${this.apiUrl}api/users/get-by-id/id=${userId}`, {
+            const response = await axios.get(`${this.apiUrl}api/users/get-by-id?id=${userId}`, {
                 headers: {
                     'Service-Authorization': `Bearer ${token}`
                 }
