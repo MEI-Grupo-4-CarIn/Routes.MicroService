@@ -1,5 +1,10 @@
 # Routes.MicroService
 
+[![Docker Hub](https://img.shields.io/badge/Docker%20Hub-Routes.MicroService-blue)](https://hub.docker.com/r/duartefernandes/routes-microservice)
+[![Docker Image Version (latest by date)](https://img.shields.io/docker/v/duartefernandes/routes-microservice?label=version)](https://hub.docker.com/r/duartefernandes/routes-microservice)
+[![Docker Image Size (latest by date)](https://img.shields.io/docker/image-size/duartefernandes/routes-microservice?label=size)](https://hub.docker.com/r/duartefernandes/routes-microservice)
+[![Docker Pulls](https://img.shields.io/docker/pulls/duartefernandes/routes-microservice)](https://hub.docker.com/r/duartefernandes/routes-microservice)
+
 This is a microservice for managing routes in a transportation system. It's built with _Node.js_ and _Express.js_, and uses _MongoDB_ for data persistence. The service provides endpoints for creating, updating, retrieving, and deleting routes.
 
 Each route is associated with a vehicle and a user (driver), and the service verifies the existence of the vehicle and the user by making requests to the [Vehicles.MicroService](https://github.com/duartefernandes/Vehicles.MicroService) and [Auth.MicroService](https://github.com/duartefernandes/Auth.MicroService), respectively. The service also uses the [OpenRouteService API](https://openrouteservice.org) to perform geocoding actions and calculate route distances and durations.
