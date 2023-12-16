@@ -13,7 +13,7 @@ const RouteSchema = new mongoose.Schema({
     endPoint: { type: LocationSchema, required: true },
     startDate: { type: Date, required: true },
     distance: { type: Number },
-    duration: { type: Number },
+    duration: { type: String },
     status: {
         type: String,
         enum: ['pending', 'inProgress', 'completed', 'cancelled'],
