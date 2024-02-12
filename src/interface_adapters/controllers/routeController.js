@@ -1,5 +1,6 @@
 const RoutePersistence = require('../../use_cases/routePersistence');
 const NotFoundError = require('../../utils/notFoundError');
+const Logger = require('../../frameworks/logging/logger');
 
 class RouteController {
     constructor() {
@@ -9,8 +10,10 @@ class RouteController {
     async createRoute(req, res) {
         try {
             const route = await this.routePersistence.create(req.body);
+            Logger.info(`Route created by the user '${req.user.email}' with success! Info: routeId: '${route.id}' for userId: '${route.userId}' and vehicleId: '${route.vehicleId}'.`);
             res.status(201).json(route);
         } catch (error) {
+            Logger.error('Error creating route: ' + error.message);
             res.status(400).json({ message: error.message });
         }
     }
@@ -19,8 +22,10 @@ class RouteController {
         try {
             const { id } = req.params;
             const updatedRoute = await this.routePersistence.update(id, req.body);
+            Logger.info(`Route '${id}' successfully updated by the user '${req.user.email}'.`)
             res.status(200).json(updatedRoute);
         } catch (error) {
+            Logger.error(`Error updating route '${req.params.id}': ${error.message}`);
             res.status(400).json({ message: error.message });
         }
     }
@@ -32,6 +37,7 @@ class RouteController {
             const route = await this.routePersistence.getById(id, user);
             res.status(200).json(route);
         } catch (error) {
+            Logger.error(`Error obtaining route '${req.params.id}': ${error.message}`);
             if (error instanceof NotFoundError) {
                 return res.status(404).json({ message: error.message });
             } else {
@@ -45,6 +51,7 @@ class RouteController {
             const routes = await this.routePersistence.getAllRoutes();
             res.status(200).json(routes);
         } catch (error) {
+            Logger.error(`Error obtaining routes list: ${error.message}`);
             res.status(500).json({ message: error.message });
         }
     }
@@ -53,8 +60,10 @@ class RouteController {
         try {
             const { id } = req.params;
             await this.routePersistence.delete(id);
+            Logger.info(`Route '${id}' deleted by the user '${req.user.email}'.`)
             res.status(204).send();
         } catch (error) {
+            Logger.error(`Error deleting route '${req.params.id}': ${error.message}`);
             res.status(400).json({ message: error.message });
         }
     }
