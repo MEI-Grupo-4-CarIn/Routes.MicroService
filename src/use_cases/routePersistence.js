@@ -125,7 +125,7 @@ class RoutePersistence {
     async delete(id) {
         const existingRouteData = await this.routeRepository.getById(id);
         if (!existingRouteData) {
-            throw new NotFoundError('Rota não encontrada.');
+            throw new NotFoundError('Route not found.');
         }
     
         await this.routeRepository.delete(id);
