@@ -12,6 +12,7 @@ const RouteSchema = new mongoose.Schema({
     startPoint: { type: LocationSchema, required: true },
     endPoint: { type: LocationSchema, required: true },
     startDate: { type: Date, required: true },
+    estimatedEndDate: { type: Date, required: true },
     distance: { type: Number },
     duration: { type: String },
     status: {

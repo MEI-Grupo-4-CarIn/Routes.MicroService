@@ -29,7 +29,10 @@ class RouteRepository {
         const deletedRoute = await RouteModel.findByIdAndDelete(id);
         return deletedRoute;
     }
-    
+
+    async find(query) {
+        return RouteModel.find(query).exec();
+    }
 }
 
 module.exports = RouteRepository;

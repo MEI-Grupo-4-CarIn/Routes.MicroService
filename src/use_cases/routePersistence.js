@@ -45,6 +45,7 @@ class RoutePersistence {
 
         routeData.distance = route.distance;
         routeData.duration = route.duration;
+        routeData.estimatedEndDate = this._calculateEndDate(routeData.startDate, routeData.duration);
 
         const routeEntity = new RouteEntity(routeData);
 
@@ -85,6 +86,7 @@ class RoutePersistence {
 
             updatedRouteData.distance = route.distance;
             updatedRouteData.duration = route.duration;
+            updatedRouteData.estimatedEndDate = this._calculateEndDate(updatedRouteData.startDate, updatedRouteData.duration);
         }
     
         const mergedRouteData = { ...existingRouteData, ...updatedRouteData };
@@ -95,6 +97,20 @@ class RoutePersistence {
             throw new Error(validation.errors.join('\n'));
         }
     
+        const existingRoutes = await this.routeRepository.find({
+            userId: routeData.userId,
+            vehicleId: routeData.vehicleId,
+            $or: [
+                { startDate: { $lt: estimatedEndDate, $gt: routeData.startDate } },
+                { estimatedEndDate: { $lt: estimatedEndDate, $gt: routeData.startDate } }
+            ]
+        });
+
+        // If any routes are found, there is an overlap
+        if (existingRoutes.length >   0) {
+            throw new Error('There is an existing route that overlaps with the given time frame.');
+        }
+
         return this.routeRepository.update(id, route);
     }
 
@@ -145,6 +161,18 @@ class RoutePersistence {
         } catch (error) {
             throw new Error(error.message);
         }
+    }
+
+    _calculateEndDate(startDate, duration) {
+        const durationInMilliseconds = durationToMilliseconds(duration);
+        const endDate = new Date(startDate.getTime() + durationInMilliseconds);
+        return endDate;
+    }
+    
+    _durationToMilliseconds(duration) {
+        // Converts the duration on "HH:mm" format
+        const [hours, minutes] = duration.split(':').map(Number);
+        return ((hours *   60 + minutes) *   60 *   1000);
     }
 }
 
