@@ -12,6 +12,7 @@ exports.RouteEntity = class RouteEntity {
             'startPoint',
             'endPoint',
             'startDate',
+            'estimatedEndDate',
             'distance',
             'duration',
             'status',

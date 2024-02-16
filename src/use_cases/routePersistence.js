@@ -45,6 +45,7 @@ class RoutePersistence {
 
         routeData.distance = route.distance;
         routeData.duration = route.duration;
+        routeData.estimatedEndDate = this._calculateEndDate(routeData.startDate, routeData.duration);
 
         const routeEntity = new RouteEntity(routeData);
 
@@ -52,6 +53,8 @@ class RoutePersistence {
         if (!validation.isValid) {
             throw new Error(validation.errors.join('\n'));
         }
+
+        await this._validateUserAndVehicleAvailability(routeData);
 
         return this.routeRepository.create(routeEntity);
     }
@@ -85,6 +88,7 @@ class RoutePersistence {
 
             updatedRouteData.distance = route.distance;
             updatedRouteData.duration = route.duration;
+            updatedRouteData.estimatedEndDate = this._calculateEndDate(updatedRouteData.startDate, updatedRouteData.duration);
         }
     
         const mergedRouteData = { ...existingRouteData, ...updatedRouteData };
@@ -95,6 +99,8 @@ class RoutePersistence {
             throw new Error(validation.errors.join('\n'));
         }
     
+        await this._validateUserAndVehicleAvailability(mergedRouteData);
+
         return this.routeRepository.update(id, route);
     }
 
@@ -145,6 +151,48 @@ class RoutePersistence {
         } catch (error) {
             throw new Error(error.message);
         }
+    }
+
+    async _validateUserAndVehicleAvailability(routeData)
+    {
+        const existingRoutes = await this.routeRepository.find({
+            $or: [
+                {
+                    userId: routeData.userId,
+                    startDate: { $lte: routeData.estimatedEndDate, $gte: routeData.startDate }
+                },
+                {
+                    userId: routeData.userId,
+                    estimatedEndDate: { $lte: routeData.estimatedEndDate, $gte: routeData.startDate }
+                },
+                {
+                    vehicleId: routeData.vehicleId,
+                    startDate: { $lte: routeData.estimatedEndDate, $gte: routeData.startDate }
+                },
+                {
+                    vehicleId: routeData.vehicleId,
+                    estimatedEndDate: { $lte: routeData.estimatedEndDate, $gte: routeData.startDate }
+                }
+            ]
+        });
+
+        // If any routes are found, there is an overlap
+        if (existingRoutes.length > 0) {
+            throw new Error('There is an existing route for that user or vehicle that overlaps with the given time frame.');
+        }
+    }
+
+    _calculateEndDate(startDateString, duration) {
+        const durationInMilliseconds = this._durationToMilliseconds(duration);
+        const startDate = new Date(startDateString);
+        const endDate = new Date(startDate.getTime() + durationInMilliseconds);
+        return endDate.toISOString();
+    }
+    
+    _durationToMilliseconds(duration) {
+        // Converts the duration on "HH:mm" format
+        const [hours, minutes] = duration.split(':').map(Number);
+        return ((hours *   60 + minutes) *   60 *   1000);
     }
 }
 
