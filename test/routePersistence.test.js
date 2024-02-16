@@ -30,6 +30,7 @@ describe('RoutePersistence', () => {
                     "coordinates": [-8.614032, 41.16106]
                 },
                 "startDate": "2024-12-01T00:00:00.000Z",
+                "estimatedEndDate": "2024-12-01T00:00:00.000Z",
                 "distance": 55.956,
                 "duration": 2672.3,
                 "status": "pending",
@@ -40,6 +41,7 @@ describe('RoutePersistence', () => {
                 "__v": 0
             };
             mockRouteRepository.create = jest.fn().mockResolvedValue(mockRouteData);
+            mockRouteRepository.find = jest.fn().mockResolvedValue([]);
 
             const mockUserService = new UserService();
             mockUserService.checkUserExists = jest.fn().mockResolvedValue();
@@ -50,7 +52,7 @@ describe('RoutePersistence', () => {
             const mockRouteCalculationService = new RouteCalculationService();
             const mockRouteCalculationData = {
                 distance: 55.956,
-                duration: 2672.3
+                duration: "00:44"
             };
             mockRouteCalculationService.calculateRoute = jest.fn().mockResolvedValue(mockRouteCalculationData);
 
@@ -102,6 +104,184 @@ describe('RoutePersistence', () => {
             };
 
             await expect(routePersistence.create(invalidRouteData)).rejects.toThrow();
+        });
+
+        const overlappingUserRoutes = [
+            {
+                "_id": "6575ea5862568a45931aee8d",
+                "userId": "5",
+                "vehicleId": "6575972b0e7beb961ae509e9",
+                "startPoint": {
+                    "city": "Braga",
+                    "country": "Portugal",
+                    "coordinates": [-8.415415, 41.550782]
+                },
+                "endPoint": {
+                    "city": "Porto",
+                    "country": "Portugal",
+                    "coordinates": [-8.614032, 41.16106]
+                },
+                "startDate": "2023-01-01T00:00:00Z",
+                "estimatedEndDate": "2023-01-02T00:00:00Z",
+                "distance": 55.956,
+                "duration": 2672.3,
+                "status": "pending",
+                "avoidTolls": false,
+                "avoidHighways": false,
+                "createdAt": "2023-12-10T16:42:00.318Z",
+                "updatedAt": "2023-12-10T16:42:00.318Z",
+                "__v": 0
+            },
+            {
+                "_id": "6575ea5862568a45931aee8d",
+                "userId": "5",
+                "vehicleId": "6575972b0e7beb961ae509a8",
+                "startPoint": {
+                    "city": "Braga",
+                    "country": "Portugal",
+                    "coordinates": [-8.415415, 41.550782]
+                },
+                "endPoint": {
+                    "city": "Porto",
+                    "country": "Portugal",
+                    "coordinates": [-8.614032, 41.16106]
+                },
+                "startDate": "2023-01-01T00:00:00Z",
+                "estimatedEndDate": "2023-01-02T00:00:00Z",
+                "distance": 55.956,
+                "duration": 2672.3,
+                "status": "pending",
+                "avoidTolls": false,
+                "avoidHighways": false,
+                "createdAt": "2023-12-10T16:42:00.318Z",
+                "updatedAt": "2023-12-10T16:42:00.318Z",
+                "__v": 0
+            },
+        ];
+
+        const overlappingVehicleRoutes = [
+            {
+                "_id": "6575ea5862568a45931aee8d",
+                "userId": "2",
+                "vehicleId": "6575972b0e7beb961ae509e9",
+                "startPoint": {
+                    "city": "Braga",
+                    "country": "Portugal",
+                    "coordinates": [-8.415415, 41.550782]
+                },
+                "endPoint": {
+                    "city": "Porto",
+                    "country": "Portugal",
+                    "coordinates": [-8.614032, 41.16106]
+                },
+                "startDate": "2023-01-01T00:00:00Z",
+                "estimatedEndDate": "2023-01-02T00:00:00Z",
+                "distance": 55.956,
+                "duration": 2672.3,
+                "status": "pending",
+                "avoidTolls": false,
+                "avoidHighways": false,
+                "createdAt": "2023-12-10T16:42:00.318Z",
+                "updatedAt": "2023-12-10T16:42:00.318Z",
+                "__v": 0
+            },
+            {
+                "_id": "6575ea5862568a45931aee8d",
+                "userId": "5",
+                "vehicleId": "6575972b0e7beb961ae509e9",
+                "startPoint": {
+                    "city": "Braga",
+                    "country": "Portugal",
+                    "coordinates": [-8.415415, 41.550782]
+                },
+                "endPoint": {
+                    "city": "Porto",
+                    "country": "Portugal",
+                    "coordinates": [-8.614032, 41.16106]
+                },
+                "startDate": "2023-01-01T00:00:00Z",
+                "estimatedEndDate": "2023-01-02T00:00:00Z",
+                "distance": 55.956,
+                "duration": 2672.3,
+                "status": "pending",
+                "avoidTolls": false,
+                "avoidHighways": false,
+                "createdAt": "2023-12-10T16:42:00.318Z",
+                "updatedAt": "2023-12-10T16:42:00.318Z",
+                "__v": 0
+            },
+        ];
+
+        it('should throw an error if there is an existing route that overlaps with the given time frame based on userId', async () => {
+            const routeData = {
+                "_id": "6575ea5862568a45931aee8d",
+                "userId": "5",
+                "vehicleId": "6575972b0e7beb961ae509e9",
+                "startPoint": {
+                    "city": "Braga",
+                    "country": "Portugal",
+                    "coordinates": [-8.415415, 41.550782]
+                },
+                "endPoint": {
+                    "city": "Porto",
+                    "country": "Portugal",
+                    "coordinates": [-8.614032, 41.16106]
+                },
+                "startDate": "2023-01-01T00:00:00Z",
+                "estimatedEndDate": "2023-01-02T00:00:00Z",
+                "distance": 55.956,
+                "duration": 2672.3,
+                "status": "pending",
+                "avoidTolls": false,
+                "avoidHighways": false,
+                "createdAt": "2023-12-10T16:42:00.318Z",
+                "updatedAt": "2023-12-10T16:42:00.318Z",
+                "__v": 0
+            };
+
+            const mockRouteRepository = new RouteRepository();
+            mockRouteRepository.find = jest.fn().mockResolvedValue(overlappingUserRoutes);
+        
+            const routePersistence = new RoutePersistence();
+            routePersistence.routeRepository = mockRouteRepository;
+
+            await expect(routePersistence._validateUserAndVehicleAvailability(routeData)).rejects.toThrow('There is an existing route for that user or vehicle that overlaps with the given time frame.');
+        });
+            
+        it('should throw an error if there is an existing route that overlaps with the given time frame based on vehicleId', async () => {            
+            const routeData = {
+                "_id": "6575ea5862568a45931aee8d",
+                "userId": "2",
+                "vehicleId": "6575972b0e7beb961ae509e9",
+                "startPoint": {
+                    "city": "Braga",
+                    "country": "Portugal",
+                    "coordinates": [-8.415415, 41.550782]
+                },
+                "endPoint": {
+                    "city": "Porto",
+                    "country": "Portugal",
+                    "coordinates": [-8.614032, 41.16106]
+                },
+                "startDate": "2023-01-01T00:00:00Z",
+                "estimatedEndDate": "2023-01-02T00:00:00Z",
+                "distance": 55.956,
+                "duration": 2672.3,
+                "status": "pending",
+                "avoidTolls": false,
+                "avoidHighways": false,
+                "createdAt": "2023-12-10T16:42:00.318Z",
+                "updatedAt": "2023-12-10T16:42:00.318Z",
+                "__v": 0
+            };
+
+            const mockRouteRepository = new RouteRepository();
+            mockRouteRepository.find = jest.fn().mockResolvedValue(overlappingVehicleRoutes);
+        
+            const routePersistence = new RoutePersistence();
+            routePersistence.routeRepository = mockRouteRepository;
+
+            await expect(routePersistence._validateUserAndVehicleAvailability(routeData)).rejects.toThrow('There is an existing route for that user or vehicle that overlaps with the given time frame.');
         });
     });
 
@@ -160,6 +340,7 @@ describe('RoutePersistence', () => {
                 "__v": 0
             };
             mockRouteRepository.update = jest.fn().mockResolvedValue(updatedRouteData);
+            mockRouteRepository.find = jest.fn().mockResolvedValue([]);
 
             const mockUserService = new UserService();
             mockUserService.checkUserExists = jest.fn().mockResolvedValue();
@@ -170,7 +351,7 @@ describe('RoutePersistence', () => {
             const mockRouteCalculationService = new RouteCalculationService();
             const mockRouteCalculationData = {
                 distance: 55.956,
-                duration: 2672.3
+                duration: "00:44"
             };
             mockRouteCalculationService.calculateRoute = jest.fn().mockResolvedValue(mockRouteCalculationData);
 
