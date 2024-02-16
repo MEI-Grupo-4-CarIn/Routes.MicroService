@@ -13,7 +13,7 @@ class RouteController {
             Logger.info(`Route created by the user '${req.user.email}' with success! Info: routeId: '${route.id}' for userId: '${route.userId}' and vehicleId: '${route.vehicleId}'.`);
             res.status(201).json(route);
         } catch (error) {
-            Logger.error('Error creating route: ' + error.message);
+            Logger.error(`Error creating route:`, error);
             res.status(400).json({ message: error.message });
         }
     }
@@ -25,7 +25,7 @@ class RouteController {
             Logger.info(`Route '${id}' successfully updated by the user '${req.user.email}'.`)
             res.status(200).json(updatedRoute);
         } catch (error) {
-            Logger.error(`Error updating route '${req.params.id}': ${error.message}`);
+            Logger.error(`Error updating the route '${req.params.id}':`, error);
             res.status(400).json({ message: error.message });
         }
     }
@@ -37,7 +37,7 @@ class RouteController {
             const route = await this.routePersistence.getById(id, user);
             res.status(200).json(route);
         } catch (error) {
-            Logger.error(`Error obtaining route '${req.params.id}': ${error.message}`);
+            Logger.error(`Error obtaining the route '${req.params.id}':`, error);
             if (error instanceof NotFoundError) {
                 return res.status(404).json({ message: error.message });
             } else {
@@ -51,7 +51,7 @@ class RouteController {
             const routes = await this.routePersistence.getAllRoutes();
             res.status(200).json(routes);
         } catch (error) {
-            Logger.error(`Error obtaining routes list: ${error.message}`);
+            Logger.error(`Error obtaining routes list:`, error);
             res.status(500).json({ message: error.message });
         }
     }
@@ -63,7 +63,7 @@ class RouteController {
             Logger.info(`Route '${id}' deleted by the user '${req.user.email}'.`)
             res.status(204).send();
         } catch (error) {
-            Logger.error(`Error deleting route '${req.params.id}': ${error.message}`);
+            Logger.error(`Error deleting the route '${req.params.id}':`, error);
             res.status(400).json({ message: error.message });
         }
     }
