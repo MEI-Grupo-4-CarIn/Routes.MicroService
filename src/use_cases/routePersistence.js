@@ -54,6 +54,8 @@ class RoutePersistence {
             throw new Error(validation.errors.join('\n'));
         }
 
+        await this._validateUserAndVehicleAvailability(routeData);
+
         return this.routeRepository.create(routeEntity);
     }
 
@@ -97,19 +99,7 @@ class RoutePersistence {
             throw new Error(validation.errors.join('\n'));
         }
     
-        const existingRoutes = await this.routeRepository.find({
-            userId: routeData.userId,
-            vehicleId: routeData.vehicleId,
-            $or: [
-                { startDate: { $lt: estimatedEndDate, $gt: routeData.startDate } },
-                { estimatedEndDate: { $lt: estimatedEndDate, $gt: routeData.startDate } }
-            ]
-        });
-
-        // If any routes are found, there is an overlap
-        if (existingRoutes.length >   0) {
-            throw new Error('There is an existing route that overlaps with the given time frame.');
-        }
+        await this._validateUserAndVehicleAvailability(mergedRouteData);
 
         return this.routeRepository.update(id, route);
     }
@@ -163,10 +153,40 @@ class RoutePersistence {
         }
     }
 
-    _calculateEndDate(startDate, duration) {
-        const durationInMilliseconds = durationToMilliseconds(duration);
+    async _validateUserAndVehicleAvailability(routeData)
+    {
+        const existingRoutes = await this.routeRepository.find({
+            $or: [
+                {
+                    userId: routeData.userId,
+                    startDate: { $lte: routeData.estimatedEndDate, $gte: routeData.startDate }
+                },
+                {
+                    userId: routeData.userId,
+                    estimatedEndDate: { $lte: routeData.estimatedEndDate, $gte: routeData.startDate }
+                },
+                {
+                    vehicleId: routeData.vehicleId,
+                    startDate: { $lte: routeData.estimatedEndDate, $gte: routeData.startDate }
+                },
+                {
+                    vehicleId: routeData.vehicleId,
+                    estimatedEndDate: { $lte: routeData.estimatedEndDate, $gte: routeData.startDate }
+                }
+            ]
+        });
+
+        // If any routes are found, there is an overlap
+        if (existingRoutes.length > 0) {
+            throw new Error('There is an existing route for that user or vehicle that overlaps with the given time frame.');
+        }
+    }
+
+    _calculateEndDate(startDateString, duration) {
+        const durationInMilliseconds = this._durationToMilliseconds(duration);
+        const startDate = new Date(startDateString);
         const endDate = new Date(startDate.getTime() + durationInMilliseconds);
-        return endDate;
+        return endDate.toISOString();
     }
     
     _durationToMilliseconds(duration) {
