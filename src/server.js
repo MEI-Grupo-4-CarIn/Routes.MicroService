@@ -14,6 +14,7 @@ if (fs.existsSync(envPath)) {
 }
 
 const routeRoute = require('./interface_adapters/routes/routeRoute'); 
+const { subscribeToQueue } = require('./frameworks/rabbitmq');
 
 const uri = process.env.MONGO_URI;
 mongoose.Promise = global.Promise;
@@ -26,6 +27,9 @@ mongoose.connect(uri).then(() => {
 app.use(express.json());
 app.use('/swagger', swaggerUI.serve, swaggerUI.setup(swaggerSpec));
 app.use('/api', routeRoute);
+
+// RabbitMQ Subscriptions
+subscribeToQueue('ROUTES_Recalculate');
 
 app.listen(port, () => {
     console.log(`Routes.MicroService listening at http://localhost:${port}/swagger`);

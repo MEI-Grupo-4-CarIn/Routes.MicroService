@@ -27,12 +27,34 @@ class RouteValidator {
         avoidHighways: Joi.boolean()
     }).min(1);
 
+    static recalculateRouteSchema = Joi.object({
+        action: Joi.string().valid('ROUTES_Recalculate').required(),
+        data: Joi.object({
+            routeId: Joi.string().required(),
+            actualPosition: Joi.object({
+                address: Joi.string().required()
+            }).required(),
+            locationsToPass: Joi.array().items(
+                Joi.object({
+                    address: Joi.string().required()
+                })
+            ).required(),
+            finalLocation: Joi.object({
+                address: Joi.string().required()
+            }).required()
+        }).required()
+    });
+
     static validateCreate(data) {
         return this.createRouteSchema.validate(data);
     }
 
     static validateUpdate(data) {
         return this.updateRouteSchema.validate(data);
+    }
+
+    static validateRecalculate(data) {
+        return this.recalculateRouteSchema.validate(data);
     }
 }
 
