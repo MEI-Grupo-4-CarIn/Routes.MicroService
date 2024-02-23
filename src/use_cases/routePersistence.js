@@ -39,8 +39,7 @@ class RoutePersistence {
             avoidHighways: routeData.avoidHighways
         };
         const route = await this.routeCalculationService.calculateRoute(
-            routeData.startPoint.coordinates,
-            routeData.endPoint.coordinates,
+            [routeData.startPoint.coordinates, routeData.endPoint.coordinates],
             routeOptions);
 
         routeData.distance = route.distance;
@@ -82,8 +81,7 @@ class RoutePersistence {
                 avoidHighways: updatedRouteData.avoidHighways ?? existingRouteData.avoidHighways
             };
             const route = await this.routeCalculationService.calculateRoute(
-                existingRouteData.startPoint.coordinates,
-                existingRouteData.endPoint.coordinates,
+                [existingRouteData.startPoint.coordinates, existingRouteData.endPoint.coordinates],
                 routeOptions);
 
             updatedRouteData.distance = route.distance;
@@ -136,6 +134,51 @@ class RoutePersistence {
     
         await this.routeRepository.delete(id);
     }
+
+    async recalculateRoute(eventData) {
+        // Validate the data
+        const { error } = RouteValidator.validateRecalculate(eventData);
+        if (error) {
+            throw new Error(`Invalid route data: ${error.details[0].message}.`);
+        }
+        
+        let routeData = eventData.data;
+
+        let existingRouteData = await this.routeRepository.getById(routeData.routeId);
+        if (!existingRouteData) {
+            throw new NotFoundError('Route not found.');
+        }
+
+        // Recalculate route using the route calculation service
+        const routeOptions = {
+            avoidTolls: existingRouteData.avoidTolls,
+            avoidHighways: existingRouteData.avoidHighways
+        };
+
+        const actualPositionCoordinates = await this.geocodingService.getCoordinates(routeData.actualPosition.address);
+        const locationsToPassCoordinates = await Promise.all(routeData.locationsToPass.map(location => this.geocodingService.getCoordinates(location.address)));
+        const finalLocationCoordinates = await this.geocodingService.getCoordinates(routeData.finalLocation.address);
+
+        const calculatedRoute = await this.routeCalculationService.calculateRoute(
+            [actualPositionCoordinates, ...locationsToPassCoordinates, finalLocationCoordinates],
+            routeOptions
+        );
+
+        existingRouteData.distance = calculatedRoute.distance;
+        existingRouteData.duration = calculatedRoute.duration;
+        existingRouteData.estimatedEndDate = this._calculateEndDate(existingRouteData.startDate, existingRouteData.duration);
+
+        const route = new RouteEntity(existingRouteData);
+    
+        const validation = await route.validator();
+        if (!validation.isValid) {
+            throw new Error(validation.errors.join('\n'));
+        }
+    
+        await this._validateUserAndVehicleAvailability(existingRouteData);
+
+        return this.routeRepository.update(existingRouteData._id, route);
+    }
     
     async _checkVehicleExistsAsync(vehicleId) {
         try {
@@ -155,7 +198,7 @@ class RoutePersistence {
 
     async _validateUserAndVehicleAvailability(routeData)
     {
-        const existingRoutes = await this.routeRepository.find({
+        let existingRoutes = await this.routeRepository.find({
             $or: [
                 {
                     userId: routeData.userId,
@@ -175,6 +218,10 @@ class RoutePersistence {
                 }
             ]
         });
+
+        if (routeData._id) {
+            existingRoutes = existingRoutes.filter(route => route._id.toString() !== routeData._id.toString());
+        }
 
         // If any routes are found, there is an overlap
         if (existingRoutes.length > 0) {

@@ -6,10 +6,10 @@ class RouteCalculationService {
         this.apiKey = process.env.OPENROUTESERVICE_API_KEY;
     }
 
-    async calculateRoute(startPointCoordinates, endPointCoordinates, routeOptions) {
+    async calculateRoute(coordinates, routeOptions) {
         try {
             const body = {
-                coordinates: [startPointCoordinates, endPointCoordinates],
+                coordinates: coordinates,
                 instructions: "false",
                 options: {
                     avoid_features: [
