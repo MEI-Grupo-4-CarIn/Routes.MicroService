@@ -9,7 +9,7 @@ This is a microservice for managing routes in a transportation system. It's buil
 
 Each route is associated with a vehicle and a user (driver), and the service verifies the existence of the vehicle and the user by making requests to the [Vehicles.MicroService](https://github.com/duartefernandes/Vehicles.MicroService) and [Auth.MicroService](https://github.com/duartefernandes/Auth.MicroService), respectively. The service also uses the [OpenRouteService API](https://openrouteservice.org) to perform geocoding actions and calculate route distances and durations.
 
-This microservice is part of a larger project that includes other microservices and an API gateway. The other components of the project can be found at the following links:
+This microservice is part of a larger project with other microservices and an API gateway. The other components of the project can be found at the following links:
  - [Auth.MicroService](https://github.com/duartefernandes/Auth.MicroService)
  - [Vehicles.MicroService](https://github.com/duartefernandes/Vehicles.MicroService)
  - [OcelotApiGateway](https://github.com/duartefernandes/OcelotApiGateway)
@@ -19,7 +19,7 @@ This microservice is part of a larger project that includes other microservices 
 To get started with this project, clone the repository and install the dependencies:
 
 ```bash
-git clone https://github.com/Rafa26Azevedo/Routes.MicroService.git
+git clone https://github.com/MEI-Grupo-4-CarIn/Routes.MicroService.git
 cd Routes.MicroService
 npm install
 ```
@@ -48,8 +48,9 @@ The following environment variables are used in this project:
 - `OPENROUTESERVICE_API_KEY`: Your OpenRouteService API key.
 - `VEHICLE_MICROSERVICE_API_URL`: The base URL of the Vehicle.MicroService.
 - `AUTH_MICROSERVICE_API_URL`: The base URL of the Auth.MicroService.
-- `JWT_PUBLIC_KEY`: The public key used for JWT authentication, used to read user's authentication.
+- `JWT_PUBLIC_KEY`: The public key used for JWT authentication, used to read the user's authentication.
 - `SERVICE_SECRET_KEY`: The secret key fot service-to-service JWT authentication.
+- `RABBITMQ_URI`: The base URL of your RabbitMQ instance.
 
 Remember not to commit the `.env` file to the repository. This file is included in the `.gitignore` file to prevent it from being accidentally committed.
 
