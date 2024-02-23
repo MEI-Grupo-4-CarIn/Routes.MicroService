@@ -50,6 +50,7 @@ The following environment variables are used in this project:
 - `AUTH_MICROSERVICE_API_URL`: The base URL of the Auth.MicroService.
 - `JWT_PUBLIC_KEY`: The public key used for JWT authentication, used to read the user's authentication.
 - `SERVICE_SECRET_KEY`: The secret key fot service-to-service JWT authentication.
+- `ELASTICSEARCH_HOST`: The Elasticsearch host.
 - `RABBITMQ_URI`: The base URL of your RabbitMQ instance.
 
 Remember not to commit the `.env` file to the repository. This file is included in the `.gitignore` file to prevent it from being accidentally committed.
