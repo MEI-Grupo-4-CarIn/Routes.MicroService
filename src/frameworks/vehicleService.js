@@ -12,21 +12,16 @@ class VehicleService {
     const token = generateJwt(payload);
 
     try {
-      const response = await axios.get(
-        `${this.apiUrl}api/vehicles/${vehicleId}`,
-        {
-          headers: {
-            "Service-Authorization": `Bearer ${token}`,
-          },
+      const response = await axios.get(`${this.apiUrl}api/vehicles/${vehicleId}`, {
+        headers: {
+          "Service-Authorization": `Bearer ${token}`,
         },
-      );
+      });
       return response.status === 200;
     } catch (error) {
       if (error.response) {
         console.error("Error checking vehicle:", error.response.data.message);
-        throw new Error(
-          "Error checking vehicle: " + error.response.data.message,
-        );
+        throw new Error("Error checking vehicle: " + error.response.data.message);
       }
 
       console.error("ERROR: Vehicle service is down or not responding.");

@@ -54,14 +54,10 @@ describe("RoutePersistence", () => {
         distance: 55.956,
         duration: "00:44",
       };
-      mockRouteCalculationService.calculateRoute = jest
-        .fn()
-        .mockResolvedValue(mockRouteCalculationData);
+      mockRouteCalculationService.calculateRoute = jest.fn().mockResolvedValue(mockRouteCalculationData);
 
       const mockGeocodingService = new GeocodingService();
-      mockGeocodingService.getCoordinates = jest
-        .fn()
-        .mockResolvedValue([-8.415415, 41.550782]);
+      mockGeocodingService.getCoordinates = jest.fn().mockResolvedValue([-8.415415, 41.550782]);
 
       const routePersistence = new RoutePersistence();
       routePersistence.routeRepository = mockRouteRepository;
@@ -244,17 +240,13 @@ describe("RoutePersistence", () => {
       };
 
       const mockRouteRepository = new RouteRepository();
-      mockRouteRepository.find = jest
-        .fn()
-        .mockResolvedValue(overlappingUserRoutes);
+      mockRouteRepository.find = jest.fn().mockResolvedValue(overlappingUserRoutes);
 
       const routePersistence = new RoutePersistence();
       routePersistence.routeRepository = mockRouteRepository;
 
-      await expect(
-        routePersistence._validateUserAndVehicleAvailability(routeData),
-      ).rejects.toThrow(
-        "There is an existing route for that user or vehicle that overlaps with the given time frame.",
+      await expect(routePersistence._validateUserAndVehicleAvailability(routeData)).rejects.toThrow(
+        "There is an existing route for that user or vehicle that overlaps with the given time frame."
       );
     });
 
@@ -286,17 +278,13 @@ describe("RoutePersistence", () => {
       };
 
       const mockRouteRepository = new RouteRepository();
-      mockRouteRepository.find = jest
-        .fn()
-        .mockResolvedValue(overlappingVehicleRoutes);
+      mockRouteRepository.find = jest.fn().mockResolvedValue(overlappingVehicleRoutes);
 
       const routePersistence = new RoutePersistence();
       routePersistence.routeRepository = mockRouteRepository;
 
-      await expect(
-        routePersistence._validateUserAndVehicleAvailability(routeData),
-      ).rejects.toThrow(
-        "There is an existing route for that user or vehicle that overlaps with the given time frame.",
+      await expect(routePersistence._validateUserAndVehicleAvailability(routeData)).rejects.toThrow(
+        "There is an existing route for that user or vehicle that overlaps with the given time frame."
       );
     });
   });
@@ -329,9 +317,7 @@ describe("RoutePersistence", () => {
         updatedAt: "2023-12-10T16:42:00.318Z",
         __v: 0,
       };
-      mockRouteRepository.getById = jest
-        .fn()
-        .mockResolvedValue(existingRouteData);
+      mockRouteRepository.getById = jest.fn().mockResolvedValue(existingRouteData);
 
       const updatedRouteData = {
         _id: "6575ea5862568a45931aee8d",
@@ -357,9 +343,7 @@ describe("RoutePersistence", () => {
         updatedAt: "2023-12-10T16:42:00.318Z",
         __v: 0,
       };
-      mockRouteRepository.update = jest
-        .fn()
-        .mockResolvedValue(updatedRouteData);
+      mockRouteRepository.update = jest.fn().mockResolvedValue(updatedRouteData);
       mockRouteRepository.find = jest.fn().mockResolvedValue([]);
 
       const mockUserService = new UserService();
@@ -373,14 +357,10 @@ describe("RoutePersistence", () => {
         distance: 55.956,
         duration: "00:44",
       };
-      mockRouteCalculationService.calculateRoute = jest
-        .fn()
-        .mockResolvedValue(mockRouteCalculationData);
+      mockRouteCalculationService.calculateRoute = jest.fn().mockResolvedValue(mockRouteCalculationData);
 
       const mockGeocodingService = new GeocodingService();
-      mockGeocodingService.getCoordinates = jest
-        .fn()
-        .mockResolvedValue([-8.415415, 41.550782]);
+      mockGeocodingService.getCoordinates = jest.fn().mockResolvedValue([-8.415415, 41.550782]);
 
       const routePersistence = new RoutePersistence();
       routePersistence.routeRepository = mockRouteRepository;
@@ -392,10 +372,7 @@ describe("RoutePersistence", () => {
         status: "completed",
       };
 
-      const route = await routePersistence.update(
-        "6575ea5862568a45931aee8d",
-        routeDataForUpdate,
-      );
+      const route = await routePersistence.update("6575ea5862568a45931aee8d", routeDataForUpdate);
       expect(route).toEqual(updatedRouteData);
     });
 
@@ -412,9 +389,7 @@ describe("RoutePersistence", () => {
         },
       };
 
-      await expect(
-        routePersistence.update("6575ea5862568a45931aee8d", invalidRouteData),
-      ).rejects.toThrow();
+      await expect(routePersistence.update("6575ea5862568a45931aee8d", invalidRouteData)).rejects.toThrow();
     });
   });
 });

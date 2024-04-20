@@ -11,22 +11,13 @@ function authMiddleware(allowedRoles) {
           return res.status(403).send({ message: "Invalid token." });
         }
         // Check if the user's role is allowed
-        if (
-          allowedRoles.includes(
-            user[
-              "http://schemas.microsoft.com/ws/2008/06/identity/claims/role"
-            ],
-          )
-        ) {
+        if (allowedRoles.includes(user["http://schemas.microsoft.com/ws/2008/06/identity/claims/role"])) {
           req.user = user;
           next();
         } else {
-          res
-            .status(403)
-            .send({
-              message:
-                "You do not have the required role to access this resource.",
-            });
+          res.status(403).send({
+            message: "You do not have the required role to access this resource.",
+          });
         }
       });
     } else {

@@ -12,14 +12,11 @@ class UserService {
     const token = generateJwt(payload);
 
     try {
-      const response = await axios.get(
-        `${this.apiUrl}api/users/get-by-id?id=${userId}`,
-        {
-          headers: {
-            "Service-Authorization": `Bearer ${token}`,
-          },
+      const response = await axios.get(`${this.apiUrl}api/users/get-by-id?id=${userId}`, {
+        headers: {
+          "Service-Authorization": `Bearer ${token}`,
         },
-      );
+      });
       return response.status === 200;
     } catch (error) {
       if (error.response) {

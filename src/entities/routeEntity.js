@@ -27,10 +27,7 @@ exports.RouteEntity = class RouteEntity {
 
     const fields = RouteEntity.getFields();
     for (let field of fields) {
-      if (
-        this[field] !== undefined &&
-        (this[field] === null || this[field] === "")
-      ) {
+      if (this[field] !== undefined && (this[field] === null || this[field] === "")) {
         errors.push(`${field} cannot be null or empty`);
       }
     }
@@ -42,9 +39,7 @@ exports.RouteEntity = class RouteEntity {
       this.startPoint.coordinates.length !== 2 ||
       !this.startPoint.coordinates.every(Number.isFinite)
     ) {
-      errors.push(
-        "Invalid startPoint. City, country, and coordinates (as an array of two numbers) are required.",
-      );
+      errors.push("Invalid startPoint. City, country, and coordinates (as an array of two numbers) are required.");
     }
     if (
       typeof this.endPoint.city !== "string" ||
@@ -53,9 +48,7 @@ exports.RouteEntity = class RouteEntity {
       this.endPoint.coordinates.length !== 2 ||
       !this.endPoint.coordinates.every(Number.isFinite)
     ) {
-      errors.push(
-        "Invalid endPoint. City, country, and coordinates (as an array of two numbers) are required.",
-      );
+      errors.push("Invalid endPoint. City, country, and coordinates (as an array of two numbers) are required.");
     }
 
     return {

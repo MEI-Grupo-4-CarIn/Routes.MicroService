@@ -30,30 +30,19 @@ class RoutePersistence {
     await this._checkVehicleExistsAsync(routeData.vehicleId);
 
     // Get coordinates using the geocoding service
-    routeData.startPoint.coordinates =
-      await this.geocodingService.getCoordinates(
-        `${routeData.startPoint.city}, ${routeData.startPoint.country}`,
-      );
-    routeData.endPoint.coordinates = await this.geocodingService.getCoordinates(
-      `${routeData.endPoint.city}, ${routeData.endPoint.country}`,
-    );
+    routeData.startPoint.coordinates = await this.geocodingService.getCoordinates(`${routeData.startPoint.city}, ${routeData.startPoint.country}`);
+    routeData.endPoint.coordinates = await this.geocodingService.getCoordinates(`${routeData.endPoint.city}, ${routeData.endPoint.country}`);
 
     // Calculate route using the route calculation service
     const routeOptions = {
       avoidTolls: routeData.avoidTolls,
       avoidHighways: routeData.avoidHighways,
     };
-    const route = await this.routeCalculationService.calculateRoute(
-      [routeData.startPoint.coordinates, routeData.endPoint.coordinates],
-      routeOptions,
-    );
+    const route = await this.routeCalculationService.calculateRoute([routeData.startPoint.coordinates, routeData.endPoint.coordinates], routeOptions);
 
     routeData.distance = route.distance;
     routeData.duration = route.duration;
-    routeData.estimatedEndDate = this._calculateEndDate(
-      routeData.startDate,
-      routeData.duration,
-    );
+    routeData.estimatedEndDate = this._calculateEndDate(routeData.startDate, routeData.duration);
 
     const routeEntity = new RouteEntity(routeData);
 
@@ -83,30 +72,20 @@ class RoutePersistence {
       // Check if vehicle exists
       await this._checkVehicleExistsAsync(routeData.vehicleId);
     }
-    if (
-      updatedRouteData.avoidTolls !== undefined ||
-      updatedRouteData.avoidHighways !== undefined
-    ) {
+    if (updatedRouteData.avoidTolls !== undefined || updatedRouteData.avoidHighways !== undefined) {
       // Recalculate route using the route calculation service
       const routeOptions = {
         avoidTolls: updatedRouteData.avoidTolls ?? existingRouteData.avoidTolls,
-        avoidHighways:
-          updatedRouteData.avoidHighways ?? existingRouteData.avoidHighways,
+        avoidHighways: updatedRouteData.avoidHighways ?? existingRouteData.avoidHighways,
       };
       const route = await this.routeCalculationService.calculateRoute(
-        [
-          existingRouteData.startPoint.coordinates,
-          existingRouteData.endPoint.coordinates,
-        ],
-        routeOptions,
+        [existingRouteData.startPoint.coordinates, existingRouteData.endPoint.coordinates],
+        routeOptions
       );
 
       updatedRouteData.distance = route.distance;
       updatedRouteData.duration = route.duration;
-      updatedRouteData.estimatedEndDate = this._calculateEndDate(
-        updatedRouteData.startDate,
-        updatedRouteData.duration,
-      );
+      updatedRouteData.estimatedEndDate = this._calculateEndDate(updatedRouteData.startDate, updatedRouteData.duration);
     }
 
     const mergedRouteData = { ...existingRouteData, ...updatedRouteData };
@@ -128,11 +107,7 @@ class RoutePersistence {
       throw new NotFoundError("Route not found.");
     }
 
-    if (
-      user["http://schemas.microsoft.com/ws/2008/06/identity/claims/role"] ===
-        "Driver" &&
-      user.id !== route.userId
-    ) {
+    if (user["http://schemas.microsoft.com/ws/2008/06/identity/claims/role"] === "Driver" && user.id !== route.userId) {
       throw new Error("You do not have permission to access this route.");
     }
 
@@ -166,9 +141,7 @@ class RoutePersistence {
 
     let routeData = eventData.data;
 
-    let existingRouteData = await this.routeRepository.getById(
-      routeData.routeId,
-    );
+    let existingRouteData = await this.routeRepository.getById(routeData.routeId);
     if (!existingRouteData) {
       throw new NotFoundError("Route not found.");
     }
@@ -179,34 +152,20 @@ class RoutePersistence {
       avoidHighways: existingRouteData.avoidHighways,
     };
 
-    const actualPositionCoordinates =
-      await this.geocodingService.getCoordinates(
-        routeData.actualPosition.address,
-      );
+    const actualPositionCoordinates = await this.geocodingService.getCoordinates(routeData.actualPosition.address);
     const locationsToPassCoordinates = await Promise.all(
-      routeData.locationsToPass.map((location) =>
-        this.geocodingService.getCoordinates(location.address),
-      ),
+      routeData.locationsToPass.map((location) => this.geocodingService.getCoordinates(location.address))
     );
-    const finalLocationCoordinates = await this.geocodingService.getCoordinates(
-      routeData.finalLocation.address,
-    );
+    const finalLocationCoordinates = await this.geocodingService.getCoordinates(routeData.finalLocation.address);
 
     const calculatedRoute = await this.routeCalculationService.calculateRoute(
-      [
-        actualPositionCoordinates,
-        ...locationsToPassCoordinates,
-        finalLocationCoordinates,
-      ],
-      routeOptions,
+      [actualPositionCoordinates, ...locationsToPassCoordinates, finalLocationCoordinates],
+      routeOptions
     );
 
     existingRouteData.distance = calculatedRoute.distance;
     existingRouteData.duration = calculatedRoute.duration;
-    existingRouteData.estimatedEndDate = this._calculateEndDate(
-      existingRouteData.startDate,
-      existingRouteData.duration,
-    );
+    existingRouteData.estimatedEndDate = this._calculateEndDate(existingRouteData.startDate, existingRouteData.duration);
 
     const route = new RouteEntity(existingRouteData);
 
@@ -271,16 +230,12 @@ class RoutePersistence {
     });
 
     if (routeData._id) {
-      existingRoutes = existingRoutes.filter(
-        (route) => route._id.toString() !== routeData._id.toString(),
-      );
+      existingRoutes = existingRoutes.filter((route) => route._id.toString() !== routeData._id.toString());
     }
 
     // If any routes are found, there is an overlap
     if (existingRoutes.length > 0) {
-      throw new Error(
-        "There is an existing route for that user or vehicle that overlaps with the given time frame.",
-      );
+      throw new Error("There is an existing route for that user or vehicle that overlaps with the given time frame.");
     }
   }
 

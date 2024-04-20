@@ -12,11 +12,7 @@ class RouteRepository {
   }
 
   async update(id, updatedRouteData) {
-    const updatedRoute = await RouteModel.findByIdAndUpdate(
-      id,
-      updatedRouteData,
-      { new: true },
-    );
+    const updatedRoute = await RouteModel.findByIdAndUpdate(id, updatedRouteData, { new: true });
     return updatedRoute;
   }
 
@@ -25,9 +21,7 @@ class RouteRepository {
       const allRoutes = await RouteModel.find();
       return allRoutes;
     } catch (error) {
-      throw new Error(
-        `Error getting all routes from the repository: ${error.message}`,
-      );
+      throw new Error(`Error getting all routes from the repository: ${error.message}`);
     }
   }
 

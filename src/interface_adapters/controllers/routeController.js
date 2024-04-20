@@ -11,7 +11,7 @@ class RouteController {
     try {
       const route = await this.routePersistence.create(req.body);
       Logger.info(
-        `Route created by the user '${req.user.email}' with success! Info: routeId: '${route.id}' for userId: '${route.userId}' and vehicleId: '${route.vehicleId}'.`,
+        `Route created by the user '${req.user.email}' with success! Info: routeId: '${route.id}' for userId: '${route.userId}' and vehicleId: '${route.vehicleId}'.`
       );
       res.status(201).json(route);
     } catch (error) {
@@ -24,9 +24,7 @@ class RouteController {
     try {
       const { id } = req.params;
       const updatedRoute = await this.routePersistence.update(id, req.body);
-      Logger.info(
-        `Route '${id}' successfully updated by the user '${req.user.email}'.`,
-      );
+      Logger.info(`Route '${id}' successfully updated by the user '${req.user.email}'.`);
       res.status(200).json(updatedRoute);
     } catch (error) {
       Logger.error(`Error updating the route '${req.params.id}':`, error);

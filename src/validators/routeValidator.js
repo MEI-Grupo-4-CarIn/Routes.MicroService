@@ -13,9 +13,7 @@ class RouteValidator {
       country: Joi.string().required(),
     }).required(),
     startDate: Joi.date().iso().required(),
-    status: Joi.string()
-      .valid("pending", "inProgress", "completed", "cancelled")
-      .required(),
+    status: Joi.string().valid("pending", "inProgress", "completed", "cancelled").required(),
     avoidTolls: Joi.boolean().required(),
     avoidHighways: Joi.boolean().required(),
   });
@@ -24,12 +22,7 @@ class RouteValidator {
     userId: Joi.string(),
     vehicleId: Joi.string(),
     startDate: Joi.date().iso(),
-    status: Joi.string().valid(
-      "pending",
-      "inProgress",
-      "completed",
-      "cancelled",
-    ),
+    status: Joi.string().valid("pending", "inProgress", "completed", "cancelled"),
     avoidTolls: Joi.boolean(),
     avoidHighways: Joi.boolean(),
   }).min(1);
@@ -45,7 +38,7 @@ class RouteValidator {
         .items(
           Joi.object({
             address: Joi.string().required(),
-          }),
+          })
         )
         .required(),
       finalLocation: Joi.object({

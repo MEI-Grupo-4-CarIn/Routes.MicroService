@@ -12,24 +12,17 @@ class RouteCalculationService {
         coordinates: coordinates,
         instructions: "false",
         options: {
-          avoid_features: [
-            ...(routeOptions.avoidTolls ? ["tollways"] : []),
-            ...(routeOptions.avoidHighways ? ["highways"] : []),
-          ],
+          avoid_features: [...(routeOptions.avoidTolls ? ["tollways"] : []), ...(routeOptions.avoidHighways ? ["highways"] : [])],
         },
         units: "km",
       };
 
-      const response = await axios.post(
-        `${this.apiUrl}/v2/directions/driving-car`,
-        body,
-        {
-          headers: {
-            Authorization: this.apiKey,
-            "Content-Type": "application/json; charset=utf-8",
-          },
+      const response = await axios.post(`${this.apiUrl}/v2/directions/driving-car`, body, {
+        headers: {
+          Authorization: this.apiKey,
+          "Content-Type": "application/json; charset=utf-8",
         },
-      );
+      });
 
       const route = response.data.routes[0];
       return {

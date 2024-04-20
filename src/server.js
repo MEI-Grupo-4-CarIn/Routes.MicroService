@@ -35,7 +35,5 @@ app.use("/api", routeRoute);
 subscribeToQueue("ROUTES_Recalculate");
 
 app.listen(port, () => {
-  console.log(
-    `Routes.MicroService listening at http://localhost:${port}/swagger`,
-  );
+  console.log(`Routes.MicroService listening at http://localhost:${port}/swagger`);
 });

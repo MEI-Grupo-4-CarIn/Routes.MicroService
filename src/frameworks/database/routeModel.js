@@ -6,7 +6,7 @@ const LocationSchema = new mongoose.Schema(
     country: { type: String, required: true },
     coordinates: { type: [Number], required: true },
   },
-  { _id: false },
+  { _id: false }
 );
 
 const RouteSchema = new mongoose.Schema({
