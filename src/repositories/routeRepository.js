@@ -16,29 +16,9 @@ class RouteRepository {
     return updatedRoute;
   }
 
-  async getAll(perPage, page, search, status) {
+  async getAll() {
     try {
-      let query = {};
-      if (search) {
-        const searchPattern = new RegExp(search, "i");
-
-        query.$or = [
-          { "startPoint.city": { $regex: searchPattern } },
-          { "startPoint.country": { $regex: searchPattern } },
-          { "endPoint.city": { $regex: searchPattern } },
-          { "endPoint.country": { $regex: searchPattern } },
-        ];
-      }
-      if (status) {
-        query.status = status;
-      }
-
-      const options = {
-        skip: (page - 1) * perPage,
-        limit: parseInt(perPage, 10),
-      };
-
-      const allRoutes = await RouteModel.find(query, null, options).exec();
+      const allRoutes = await RouteModel.find();
       return allRoutes;
     } catch (error) {
       throw new Error(`Error getting all routes from the repository: ${error.message}`);

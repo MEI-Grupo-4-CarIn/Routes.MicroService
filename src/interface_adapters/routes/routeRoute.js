@@ -10,23 +10,8 @@ const routeController = new RouteController();
  * tags:
  *   name: Routes
  *   description: Operations related to routes
- * definitions:
- *   Location:
- *     type: object
- *     properties:
- *       city:
- *         type: string
- *         description: City name
- *       country:
- *         type: string
- *         description: Country name
- *       coordinates:
- *         type: array
- *         items:
- *           type: number
- *         description: >
- *           [longitude, latitude] coordinates
  *
+ * definitions:
  *   Route:
  *     type: object
  *     properties:
@@ -37,25 +22,29 @@ const routeController = new RouteController();
  *         type: string
  *         description: ID of the vehicle associated with the route.
  *       startPoint:
- *         $ref: '#/definitions/Location'
+ *         type: object
+ *         properties:
+ *           city:
+ *             type: string
+ *             description: City of departure.
+ *           country:
+ *             type: string
+ *             description: Country of departure.
  *         description: Departure location of the route.
  *       endPoint:
- *         $ref: '#/definitions/Location'
+ *         type: object
+ *         properties:
+ *           city:
+ *             type: string
+ *             description: City of arrival.
+ *           country:
+ *             type: string
+ *             description: Country of arrival.
  *         description: Arrival location of the route.
  *       startDate:
  *         type: string
  *         format: date-time
  *         description: Date and time of the route's start.
- *       estimatedEndDate:
- *         type: string
- *         format: date-time
- *         description: Estimated date and time of the route's end.
- *       distance:
- *         type: number
- *         description: Distance of the route.
- *       duration:
- *         type: string
- *         description: Duration of the route.
  *       status:
  *         type: string
  *         enum: [pending, inProgress, completed, cancelled]
@@ -72,15 +61,10 @@ const routeController = new RouteController();
  *       startPoint:
  *         city: "CityA"
  *         country: "CountryA"
- *         coordinates: [0, 0]
  *       endPoint:
  *         city: "CityB"
  *         country: "CountryB"
- *         coordinates: [1, 1]
  *       startDate: "2023-01-01T12:00:00Z"
- *       estimatedEndDate: "2023-01-02T12:00:00Z"
- *       distance: 100
- *       duration: "2 hours"
  *       status: "pending"
  *       avoidTolls: true
  *       avoidHighways: false
@@ -166,46 +150,14 @@ router.get("/routes/:id", authMiddleware(["Admin", "Manager", "Driver"]), (req, 
 
 /**
  * @swagger
- * /routes:
+ * /api/routes
  *   get:
  *     tags:
  *       - Routes
- *     summary: Retrieve all routes with pagination, search, and status filter.
- *     parameters:
- *       - in: query
- *         name: perPage
- *         schema:
- *           type: integer
- *           default: 10
- *         description: Number of routes per page
- *       - in: query
- *         name: page
- *         schema:
- *           type: integer
- *           default: 1
- *         description: Page number
- *       - in: query
- *         name: search
- *         schema:
- *           type: string
- *         description: Search term to filter routes
- *       - in: query
- *         name: status
- *         schema:
- *           type: string
- *           enum: [pending, inProgress, completed, cancelled]
- *         description: Status to filter routes
+ *     summary: Get all existing routes.
  *     responses:
  *       200:
- *         description: A list of routes.
- *         schema:
- *           type: array
- *           items:
- *             $ref: '#/definitions/Route'
- *       400:
- *         description: Invalid query parameters.
- *       500:
- *         description: Error retrieving routes.
+ *         description: Routes obtained successfully.
  */
 router.get("/routes", authMiddleware(["Admin", "Manager"]), (req, res) => routeController.getAllRoutes(req, res));
 

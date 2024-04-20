@@ -114,10 +114,10 @@ class RoutePersistence {
     return route;
   }
 
-  async getAllRoutes(perPage, page, search, status) {
+  async getAllRoutes() {
     try {
-      const routes = await this.routeRepository.getAll(perPage, page, search, status);
-      return routes;
+      const allRoutes = await this.routeRepository.getAll();
+      return allRoutes;
     } catch (error) {
       throw new Error(`Error getting all routes: ${error.message}`);
     }
