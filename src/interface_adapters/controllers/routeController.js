@@ -50,7 +50,8 @@ class RouteController {
 
   async getAllRoutes(req, res) {
     try {
-      const routes = await this.routePersistence.getAllRoutes();
+      const { perPage = 10, page = 1, search, status } = req.query;
+      const routes = await this.routePersistence.getAllRoutes(perPage, page, search, status);
       res.status(200).json(routes);
     } catch (error) {
       Logger.error(`Error obtaining routes list:`, error);
