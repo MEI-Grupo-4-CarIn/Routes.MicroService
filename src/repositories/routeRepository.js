@@ -1,4 +1,5 @@
 const RouteModel = require("../frameworks/database/routeModel");
+const lodash = require("lodash");
 
 class RouteRepository {
   async getById(id) {
@@ -20,7 +21,8 @@ class RouteRepository {
     try {
       let query = {};
       if (search) {
-        const searchPattern = new RegExp(search, "i");
+        const escapedSearch = lodash.escapeRegExp(search);
+        const searchPattern = new RegExp(escapedSearch, "i");
 
         query.$or = [
           { "startPoint.city": { $regex: searchPattern } },
