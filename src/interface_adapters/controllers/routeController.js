@@ -23,6 +23,7 @@ class RouteController {
   async updateRoute(req, res) {
     try {
       const { id } = req.params;
+
       const updatedRoute = await this.routePersistence.update(id, req.body);
       Logger.info(`Route '${id}' successfully updated by the user '${req.user.email}'.`);
       res.status(200).json(updatedRoute);
@@ -36,6 +37,7 @@ class RouteController {
     try {
       const { id } = req.params;
       const user = req.user;
+
       const route = await this.routePersistence.getById(id, user);
       res.status(200).json(route);
     } catch (error) {
@@ -50,7 +52,9 @@ class RouteController {
 
   async getAllRoutes(req, res) {
     try {
-      const routes = await this.routePersistence.getAllRoutes();
+      let { perPage = 10, page = 1, search, status } = req.query;
+
+      const routes = await this.routePersistence.getAllRoutes(perPage, page, search, status);
       res.status(200).json(routes);
     } catch (error) {
       Logger.error(`Error obtaining routes list:`, error);
@@ -61,6 +65,7 @@ class RouteController {
   async deleteRoute(req, res) {
     try {
       const { id } = req.params;
+
       await this.routePersistence.delete(id);
       Logger.info(`Route '${id}' deleted by the user '${req.user.email}'.`);
       res.status(204).send();

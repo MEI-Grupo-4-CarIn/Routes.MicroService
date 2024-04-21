@@ -1,8 +1,10 @@
 const RouteModel = require("../frameworks/database/routeModel");
+const lodash = require("lodash");
 
 class RouteRepository {
   async getById(id) {
-    const document = await RouteModel.findById(id);
+    // Exclude deleted routes
+    const document = await RouteModel.findById(id).where("isDeleted").equals(false);
     return document ? document.toObject() : null;
   }
 
@@ -16,9 +18,32 @@ class RouteRepository {
     return updatedRoute;
   }
 
-  async getAll() {
+  async getAll(perPage, page, search, status) {
     try {
-      const allRoutes = await RouteModel.find();
+      // Exclude deleted routes
+      let query = { isDeleted: false };
+
+      if (search) {
+        const escapedSearch = lodash.escapeRegExp(search);
+        const searchPattern = new RegExp(escapedSearch, "i");
+
+        query.$or = [
+          { "startPoint.city": { $regex: searchPattern } },
+          { "startPoint.country": { $regex: searchPattern } },
+          { "endPoint.city": { $regex: searchPattern } },
+          { "endPoint.country": { $regex: searchPattern } },
+        ];
+      }
+      if (status) {
+        query.status = status;
+      }
+
+      const options = {
+        skip: (page - 1) * perPage,
+        limit: parseInt(perPage, 10),
+      };
+
+      const allRoutes = await RouteModel.find(query, null, options).exec();
       return allRoutes;
     } catch (error) {
       throw new Error(`Error getting all routes from the repository: ${error.message}`);
@@ -26,8 +51,8 @@ class RouteRepository {
   }
 
   async delete(id) {
-    const deletedRoute = await RouteModel.findByIdAndDelete(id);
-    return deletedRoute;
+    // Marks the route as deleted
+    await RouteModel.findByIdAndUpdate(id, { isDeleted: true });
   }
 
   async find(query) {

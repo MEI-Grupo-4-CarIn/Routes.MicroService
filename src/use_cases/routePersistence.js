@@ -114,10 +114,29 @@ class RoutePersistence {
     return route;
   }
 
-  async getAllRoutes() {
+  async getAllRoutes(perPage, page, search, status) {
     try {
-      const allRoutes = await this.routeRepository.getAll();
-      return allRoutes;
+      const maxPerPage = 100;
+      const allowedStatus = ["pending", "inProgress", "completed", "cancelled"];
+
+      perPage = parseInt(perPage, 10);
+      if (isNaN(perPage) || perPage < 1) {
+        perPage = 10;
+      } else {
+        perPage = Math.min(perPage, maxPerPage);
+      }
+
+      page = parseInt(page, 10);
+      if (isNaN(page) || page < 1) {
+        page = 1;
+      }
+
+      if (status && !allowedStatus.includes(status)) {
+        status = undefined;
+      }
+
+      const routes = await this.routeRepository.getAll(perPage, page, search, status);
+      return routes;
     } catch (error) {
       throw new Error(`Error getting all routes: ${error.message}`);
     }
