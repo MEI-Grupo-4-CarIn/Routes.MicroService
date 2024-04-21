@@ -10,13 +10,18 @@ This is a microservice for managing routes in a transportation system. It's buil
 Each route is associated with a vehicle and a user (driver), and the service verifies the existence of the vehicle and the user by making requests to the [Vehicles.MicroService](https://github.com/duartefernandes/Vehicles.MicroService) and [Auth.MicroService](https://github.com/duartefernandes/Auth.MicroService), respectively. The service also uses the [OpenRouteService API](https://openrouteservice.org) to perform geocoding actions and calculate route distances and durations.
 
 This microservice is part of a larger project with other microservices and an API gateway. The other components of the project can be found at the following links:
- - [Auth.MicroService](https://github.com/duartefernandes/Auth.MicroService)
- - [Vehicles.MicroService](https://github.com/duartefernandes/Vehicles.MicroService)
- - [OcelotApiGateway](https://github.com/duartefernandes/OcelotApiGateway)
+
+- [Auth.MicroService](https://github.com/duartefernandes/Auth.MicroService)
+- [Vehicles.MicroService](https://github.com/duartefernandes/Vehicles.MicroService)
+- [OcelotApiGateway](https://github.com/duartefernandes/OcelotApiGateway)
+
+## OpenAPI Docs
+
+![](./assets/openAPI.png)
 
 ## Getting Started
 
-To get started with this project, clone the repository and install the dependencies:
+To get started with this project, you can run it with the `docker-compose up` command together with the other dependencies on [OcelotApiGateway](https://github.com/duartefernandes/OcelotApiGateway) or simply clone the repository and install the dependencies:
 
 ```bash
 git clone https://github.com/MEI-Grupo-4-CarIn/Routes.MicroService.git
@@ -54,6 +59,17 @@ The following environment variables are used in this project:
 - `RABBITMQ_URI`: The base URL of your RabbitMQ instance.
 
 Remember not to commit the `.env` file to the repository. This file is included in the `.gitignore` file to prevent it from being accidentally committed.
+
+## Seeding the Database
+
+To seed the database with initial data, follow these steps:
+
+1. Ensure your environment variables are correctly set up, especially the `MONGO_URI` variable, which should point to your MongoDB instance.
+2. Run the seed script:
+
+```bash
+npm run seed
+```
 
 ## Testing
 
