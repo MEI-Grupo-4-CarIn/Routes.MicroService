@@ -9,7 +9,7 @@ const routeController = new RouteController();
  * @swagger
  * tags:
  *   name: Routes
- *   description: Operations related to routes
+ *   description: Operations related to routes.
  * definitions:
  *   Location:
  *     type: object

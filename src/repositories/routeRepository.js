@@ -3,7 +3,8 @@ const lodash = require("lodash");
 
 class RouteRepository {
   async getById(id) {
-    const document = await RouteModel.findById(id);
+    // Exclude deleted routes
+    const document = await RouteModel.findById(id).where("isDeleted").equals(false);
     return document ? document.toObject() : null;
   }
 
@@ -19,7 +20,9 @@ class RouteRepository {
 
   async getAll(perPage, page, search, status) {
     try {
-      let query = {};
+      // Exclude deleted routes
+      let query = { isDeleted: false };
+
       if (search) {
         const escapedSearch = lodash.escapeRegExp(search);
         const searchPattern = new RegExp(escapedSearch, "i");
@@ -48,8 +51,8 @@ class RouteRepository {
   }
 
   async delete(id) {
-    const deletedRoute = await RouteModel.findByIdAndDelete(id);
-    return deletedRoute;
+    // Marks the route as deleted
+    await RouteModel.findByIdAndUpdate(id, { isDeleted: true });
   }
 
   async find(query) {

@@ -25,6 +25,7 @@ const RouteSchema = new mongoose.Schema({
   },
   avoidTolls: { type: Boolean, required: true },
   avoidHighways: { type: Boolean, required: true },
+  isDeleted: { type: Boolean, default: false },
   createdAt: { type: Date, default: Date.now },
   updatedAt: { type: Date, default: Date.now },
 });
