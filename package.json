@@ -5,12 +5,14 @@
   "main": "src/server.js",
   "scripts": {
     "start": "node src/server.js",
-    "test": "jest"
+    "test": "jest",
+    "seed": "node src/seed.js"
   },
   "keywords": [],
   "author": "MEI - Grupo 4",
   "license": "ISC",
   "dependencies": {
+    "@faker-js/faker": "^8.4.1",
     "amqplib": "^0.10.3",
     "axios": "^1.6.2",
     "dotenv": "^8.2.0",

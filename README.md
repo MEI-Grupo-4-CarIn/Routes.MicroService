@@ -15,9 +15,13 @@ This microservice is part of a larger project with other microservices and an AP
 - [Vehicles.MicroService](https://github.com/duartefernandes/Vehicles.MicroService)
 - [OcelotApiGateway](https://github.com/duartefernandes/OcelotApiGateway)
 
+## OpenAPI Docs
+
+![](./assets/openAPI.png)
+
 ## Getting Started
 
-To get started with this project, clone the repository and install the dependencies:
+To get started with this project, you can run it with the `docker-compose up` command together with the other dependencies on OcelotApiGateway](https://github.com/duartefernandes/OcelotApiGateway) or simply clone the repository and install the dependencies:
 
 ```bash
 git clone https://github.com/MEI-Grupo-4-CarIn/Routes.MicroService.git
@@ -55,6 +59,13 @@ The following environment variables are used in this project:
 - `RABBITMQ_URI`: The base URL of your RabbitMQ instance.
 
 Remember not to commit the `.env` file to the repository. This file is included in the `.gitignore` file to prevent it from being accidentally committed.
+
+## Seeding the Database
+
+To seed the database with initial data, follow these steps:
+
+1. Ensure your environment variables are correctly set up, especially the `MONGO_URI` variable, which should point to your MongoDB instance.
+2. Run the seed script:
 
 ## Testing
 
