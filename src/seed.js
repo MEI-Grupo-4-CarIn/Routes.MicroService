@@ -13,18 +13,7 @@ const mongoDBUri = process.env.MONGO_URI;
 
 mongoose
   .connect(mongoDBUri)
-  .then(async () => {
-    console.log("MongoDB Connected...");
-
-    await RouteModel.createIndexes([
-      { key: { isDeleted: 1 } },
-      { key: { "startPoint.city": 1 } },
-      { key: { "startPoint.country": 1 } },
-      { key: { "endPoint.city": 1 } },
-      { key: { "endPoint.country": 1 } },
-      { key: { status: 1 } },
-    ]);
-  })
+  .then(() => console.log("MongoDB Connected..."))
   .catch((err) => console.error("Could not connect to MongoDB...", err));
 
 const generateSeedData = (numEntries) => {

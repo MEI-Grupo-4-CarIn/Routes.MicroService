@@ -27,12 +27,7 @@ class RouteRepository {
         const escapedSearch = lodash.escapeRegExp(search);
         const searchPattern = new RegExp(escapedSearch, "i");
 
-        query.$or = [
-          { "startPoint.city": { $regex: searchPattern } },
-          { "startPoint.country": { $regex: searchPattern } },
-          { "endPoint.city": { $regex: searchPattern } },
-          { "endPoint.country": { $regex: searchPattern } },
-        ];
+        query.$text = { $search: searchPattern };
       }
       if (status) {
         query.status = status;
