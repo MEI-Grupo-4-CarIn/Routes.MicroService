@@ -56,6 +56,9 @@ class RouteRepository {
   }
 
   async find(query) {
+    // Exclude deleted routes
+    query.isDeleted = false;
+
     return RouteModel.find(query).exec();
   }
 }
