@@ -21,7 +21,7 @@ This microservice is part of a larger project with other microservices and an AP
 
 ## Getting Started
 
-To get started with this project, you can run it with the `docker-compose up` command together with the other dependencies on OcelotApiGateway](https://github.com/duartefernandes/OcelotApiGateway) or simply clone the repository and install the dependencies:
+To get started with this project, you can run it with the `docker-compose up` command together with the other dependencies on [OcelotApiGateway](https://github.com/duartefernandes/OcelotApiGateway) or simply clone the repository and install the dependencies:
 
 ```bash
 git clone https://github.com/MEI-Grupo-4-CarIn/Routes.MicroService.git
@@ -66,6 +66,10 @@ To seed the database with initial data, follow these steps:
 
 1. Ensure your environment variables are correctly set up, especially the `MONGO_URI` variable, which should point to your MongoDB instance.
 2. Run the seed script:
+
+```bash
+npm run seed
+```
 
 ## Testing
 
