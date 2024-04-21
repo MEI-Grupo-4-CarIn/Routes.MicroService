@@ -12,7 +12,7 @@ if (fs.existsSync(envPath)) {
 const mongoDBUri = process.env.MONGO_URI;
 
 mongoose
-  .connect(mongoDBUri, { useNewUrlParser: true, useUnifiedTopology: true })
+  .connect(mongoDBUri)
   .then(() => console.log("MongoDB Connected..."))
   .catch((err) => console.error("Could not connect to MongoDB...", err));
 
@@ -34,14 +34,14 @@ const generateSeedData = (numEntries) => {
       },
       startDate: faker.date.future(),
       estimatedEndDate: faker.date.future(),
-      distance: faker.number.float({ min: 10, max: 100 }),
+      distance: faker.number.float({ min: 10, max: 500 }),
       duration: `${faker.number.int({ min: 1, max: 10 })} hours`,
       status: faker.helpers.arrayElement(["pending", "inProgress", "completed", "cancelled"], 1),
       avoidTolls: faker.datatype.boolean(),
       avoidHighways: faker.datatype.boolean(),
       isDeleted: false,
-      createdAt: new Date(),
-      updatedAt: new Date(),
+      createdAt: faker.date.past(),
+      updatedAt: faker.date.recent(),
     });
   }
   return seedData;
