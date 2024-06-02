@@ -7,6 +7,8 @@ const VehicleService = require("../frameworks/vehicleService");
 const UserService = require("../frameworks/userService");
 const NotFoundError = require("../utils/notFoundError");
 
+const driverRole = "3";
+
 class RoutePersistence {
   constructor() {
     this.routeRepository = new RouteRepository();
@@ -107,14 +109,14 @@ class RoutePersistence {
       throw new NotFoundError("Route not found.");
     }
 
-    if (user["http://schemas.microsoft.com/ws/2008/06/identity/claims/role"] === "Driver" && user.id !== route.userId) {
+    if (user["role"] === driverRole && user.id !== route.userId) {
       throw new Error("You do not have permission to access this route.");
     }
 
     return route;
   }
 
-  async getAllRoutes(perPage, page, search, status) {
+  async getAllRoutes(perPage, page, search, status, user) {
     try {
       const maxPerPage = 100;
       const allowedStatus = ["pending", "inProgress", "completed", "cancelled"];
@@ -135,7 +137,7 @@ class RoutePersistence {
         status = undefined;
       }
 
-      const routes = await this.routeRepository.getAll(perPage, page, search, status);
+      const routes = await this.routeRepository.getAll(perPage, page, search, status, user);
       return routes;
     } catch (error) {
       throw new Error(`Error getting all routes: ${error.message}`);
