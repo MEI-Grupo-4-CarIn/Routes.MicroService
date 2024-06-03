@@ -30,10 +30,10 @@ class RouteRepository {
         const searchPattern = new RegExp(escapedSearch, "i");
 
         query.$or = [
-          { "startPoint.city": searchPattern },
-          { "startPoint.country": searchPattern },
-          { "endPoint.city": searchPattern },
-          { "endPoint.country": searchPattern },
+          { "startPoint.city": { $regex: searchPattern } },
+          { "startPoint.country": { $regex: searchPattern } },
+          { "endPoint.city": { $regex: searchPattern } },
+          { "endPoint.country": { $regex: searchPattern } },
         ];
       }
       if (status) {
