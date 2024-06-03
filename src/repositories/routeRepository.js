@@ -1,6 +1,8 @@
 const RouteModel = require("../frameworks/database/routeModel");
 const lodash = require("lodash");
 
+const driverRole = "3";
+
 class RouteRepository {
   async getById(id) {
     // Exclude deleted routes
@@ -18,7 +20,7 @@ class RouteRepository {
     return updatedRoute;
   }
 
-  async getAll(perPage, page, search, status) {
+  async getAll(perPage, page, search, status, user) {
     try {
       // Exclude deleted routes
       let query = { isDeleted: false };
@@ -27,15 +29,25 @@ class RouteRepository {
         const escapedSearch = lodash.escapeRegExp(search);
         const searchPattern = new RegExp(escapedSearch, "i");
 
-        query.$text = { $search: searchPattern };
+        query.$or = [
+          { "startPoint.city": { $regex: searchPattern } },
+          { "startPoint.country": { $regex: searchPattern } },
+          { "endPoint.city": { $regex: searchPattern } },
+          { "endPoint.country": { $regex: searchPattern } },
+        ];
       }
       if (status) {
         query.status = status;
       }
 
+      if (user && user["role"] === driverRole) {
+        query.userId = user.id;
+      }
+
       const options = {
         skip: (page - 1) * perPage,
         limit: parseInt(perPage, 10),
+        sort: { createdAt: -1 },
       };
 
       const allRoutes = await RouteModel.find(query, null, options).exec();
