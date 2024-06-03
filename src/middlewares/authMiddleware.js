@@ -11,7 +11,7 @@ function authMiddleware(allowedRoles) {
           return res.status(403).send({ message: "Invalid token." });
         }
         // Check if the user's role is allowed
-        if (allowedRoles.includes(user["http://schemas.microsoft.com/ws/2008/06/identity/claims/role"])) {
+        if (allowedRoles.includes(user["role"])) {
           req.user = user;
           next();
         } else {

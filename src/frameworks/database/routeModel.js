@@ -33,12 +33,10 @@ const RouteSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-RouteSchema.index({
-  "startPoint.city": "text",
-  "startPoint.country": "text",
-  "endPoint.city": "text",
-  "endPoint.country": "text",
-});
+RouteSchema.index({ "startPoint.city": 1 });
+RouteSchema.index({ "startPoint.country": 1 });
+RouteSchema.index({ "endPoint.city": 1 });
+RouteSchema.index({ "endPoint.country": 1 });
 RouteSchema.index({ isDeleted: 1 });
 RouteSchema.index({ status: 1 });
 

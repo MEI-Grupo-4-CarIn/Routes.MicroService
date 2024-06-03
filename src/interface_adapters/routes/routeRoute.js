@@ -107,7 +107,7 @@ const routeController = new RouteController();
  *       400:
  *         description: Error creating the route.
  */
-router.post("/routes", authMiddleware(["Admin", "Manager"]), (req, res) => routeController.createRoute(req, res));
+router.post("/routes", authMiddleware(["1", "2"]), (req, res) => routeController.createRoute(req, res));
 
 /**
  * @swagger
@@ -137,7 +137,7 @@ router.post("/routes", authMiddleware(["Admin", "Manager"]), (req, res) => route
  *       400:
  *         description: Error updating the route.
  */
-router.patch("/routes/:id", authMiddleware(["Admin", "Manager"]), (req, res) => routeController.updateRoute(req, res));
+router.patch("/routes/:id", authMiddleware(["1", "2"]), (req, res) => routeController.updateRoute(req, res));
 
 /**
  * @swagger
@@ -162,7 +162,7 @@ router.patch("/routes/:id", authMiddleware(["Admin", "Manager"]), (req, res) => 
  *       400:
  *         description: Error obtaining the route.
  */
-router.get("/routes/:id", authMiddleware(["Admin", "Manager", "Driver"]), (req, res) => routeController.getById(req, res));
+router.get("/routes/:id", authMiddleware(["1", "2", "3"]), (req, res) => routeController.getById(req, res));
 
 /**
  * @swagger
@@ -207,7 +207,7 @@ router.get("/routes/:id", authMiddleware(["Admin", "Manager", "Driver"]), (req, 
  *       500:
  *         description: Error retrieving routes.
  */
-router.get("/routes", authMiddleware(["Admin", "Manager"]), (req, res) => routeController.getAllRoutes(req, res));
+router.get("/routes", authMiddleware(["1", "2", "3"]), (req, res) => routeController.getAllRoutes(req, res));
 
 /**
  * @swagger
@@ -230,6 +230,6 @@ router.get("/routes", authMiddleware(["Admin", "Manager"]), (req, res) => routeC
  *       400:
  *         description: Error deleting the route.
  */
-router.delete("/routes/:id", authMiddleware(["Admin", "Manager"]), (req, res) => routeController.deleteRoute(req, res));
+router.delete("/routes/:id", authMiddleware(["1", "2"]), (req, res) => routeController.deleteRoute(req, res));
 
 module.exports = router;

@@ -9,93 +9,17 @@
 		{
 			"name": "CreateRoute (Admin, Manager)",
 			"request": {
-				"auth": {
-					"type": "bearer",
-					"bearer": [
-						{
-							"key": "token",
-							"value": "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjIiLCJlbWFpbCI6Im1hbmFnZXJAZW1haWwuY29tIiwiaHR0cDovL3NjaGVtYXMubWljcm9zb2Z0LmNvbS93cy8yMDA4LzA2L2lkZW50aXR5L2NsYWltcy9yb2xlIjoiTWFuYWdlciIsImV4cCI6MTcwODM5MDY1NSwiaXNzIjoiQXV0aC5NaWNyb1NlcnZpY2UiLCJhdWQiOiJBdXRoLk1pY3JvU2VydmljZSJ9.Uo9ZdYsUS3Jz8_8NMKus-XS02i3lX6XX-SKd9mvxqddpWzT-CnGALH5dBHU2tUJCFmtQ4pq0fuEgOqHFKWHYHGRd4cH2OLudXYajrZ4yHoBZ6m9CT4oDPembCrNISw2FPdyrsu0Lk8AhbqPs8h-kMhqqNbkwaf281530yTiIUSA45I-_L5QZL3aMEFIYMfFYYXVAh3AomljtEXfSwaemRVEY8DZkCOG9XgWUBB7TcMYGg2cqQw-CZlSG_JuXT3zMSbqvAod5cZ5kUwrp_Vc3TsiFuyZ0uHuIUEFs_xiHA0O8nSYvXIuOmgiUewk52FPb4M36AZuPeAK2FlIBWK7DjQ",
-							"type": "string"
-						}
-					]
-				},
 				"method": "POST",
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n    \"userId\": \"1\", // should exist on Auth.MicroService\n    \"vehicleId\": \"65cf58e61e305572770668ef\", // should exist on Vehicles.MicroService\n    \"startPoint\": {\n        \"city\": \"Braga\",\n        \"country\": \"Portugal\"\n    },\n    \"endPoint\": {\n        \"city\": \"Porto\",\n        \"country\": \"Portugal\"\n    },\n    \"startDate\": \"2024-02-20T12:00:00Z\",\n    \"status\": \"pending\",\n    \"avoidTolls\": false,\n    \"avoidHighways\": false\n}",
+					"raw": "{\n    \"userId\": \"5\", // should exist on Auth.MicroService\n    \"vehicleId\": \"665ba7d2d681742968205277\", // should exist on Vehicles.MicroService\n    \"startPoint\": {\n        \"city\": \"Braga\",\n        \"country\": \"Portugal\"\n    },\n    \"endPoint\": {\n        \"city\": \"Porto\",\n        \"country\": \"Portugal\"\n    },\n    \"startDate\": \"2024-02-20T16:00:00Z\",\n    \"status\": \"pending\",\n    \"avoidTolls\": false,\n    \"avoidHighways\": false\n}",
 					"options": {
 						"raw": {
 							"language": "json"
 						}
 					}
 				},
-				"url": {
-					"raw": "{{routes-microservice-url}}api/routes/create",
-					"host": [
-						"{{routes-microservice-url}}api"
-					],
-					"path": [
-						"routes",
-						"create"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "UpdateRoute (Admin, Manager)",
-			"request": {
-				"auth": {
-					"type": "bearer",
-					"bearer": [
-						{
-							"key": "token",
-							"value": "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjIiLCJlbWFpbCI6Im1hbmFnZXJAZW1haWwuY29tIiwiaHR0cDovL3NjaGVtYXMubWljcm9zb2Z0LmNvbS93cy8yMDA4LzA2L2lkZW50aXR5L2NsYWltcy9yb2xlIjoiTWFuYWdlciIsImV4cCI6MTcwODM5MDY1NSwiaXNzIjoiQXV0aC5NaWNyb1NlcnZpY2UiLCJhdWQiOiJBdXRoLk1pY3JvU2VydmljZSJ9.Uo9ZdYsUS3Jz8_8NMKus-XS02i3lX6XX-SKd9mvxqddpWzT-CnGALH5dBHU2tUJCFmtQ4pq0fuEgOqHFKWHYHGRd4cH2OLudXYajrZ4yHoBZ6m9CT4oDPembCrNISw2FPdyrsu0Lk8AhbqPs8h-kMhqqNbkwaf281530yTiIUSA45I-_L5QZL3aMEFIYMfFYYXVAh3AomljtEXfSwaemRVEY8DZkCOG9XgWUBB7TcMYGg2cqQw-CZlSG_JuXT3zMSbqvAod5cZ5kUwrp_Vc3TsiFuyZ0uHuIUEFs_xiHA0O8nSYvXIuOmgiUewk52FPb4M36AZuPeAK2FlIBWK7DjQ",
-							"type": "string"
-						}
-					]
-				},
-				"method": "PATCH",
-				"header": [],
-				"body": {
-					"mode": "raw",
-					"raw": "{\r\n    \"status\": \"inProgress\"\r\n}",
-					"options": {
-						"raw": {
-							"language": "json"
-						}
-					}
-				},
-				"url": {
-					"raw": "{{routes-microservice-url}}api/routes/update/65d3ed1a007ac82d43a3f50b",
-					"host": [
-						"{{routes-microservice-url}}api"
-					],
-					"path": [
-						"routes",
-						"update",
-						"65d3ed1a007ac82d43a3f50b"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "GetAllRoutes (Admin, Manager)",
-			"request": {
-				"auth": {
-					"type": "bearer",
-					"bearer": [
-						{
-							"key": "token",
-							"value": "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjEiLCJlbWFpbCI6ImFkbWluQGVtYWlsLmNvbSIsImh0dHA6Ly9zY2hlbWFzLm1pY3Jvc29mdC5jb20vd3MvMjAwOC8wNi9pZGVudGl0eS9jbGFpbXMvcm9sZSI6IkFkbWluIiwiZXhwIjoxNzA4MDkwODM5LCJpc3MiOiJBdXRoLk1pY3JvU2VydmljZSIsImF1ZCI6IkF1dGguTWljcm9TZXJ2aWNlIn0.D4eg5TlUck34mR0a6xUYrQqmMrkwev2_esOMhO9Yqh_5hCcVGRv6sUD6w1ibH6bAjlphqy3fPk1HUKWi3Rs2iZHO01O95sbI5g8q96RdXPmdJAgC3DBnp1m0HnWt39TGsCmRhKop1vijJRyn15-Lz4iUAtBe5T1gXDW9pc7P0bQW5GsM22XkyeLZOr8GwRRGQAoG2s4HgVPXh99CrjMecR5o-VjAIfxToBIJQmyketYoDxkcQggSAToXDRVhN8-RMxgu8RetDUgBwWCj-RCviY4JIqoSIipTKz9sS_bmqyKFxGgZjIZYLLwmfyWzC-TvXkrrc1qgtYTGxYuOFAqzmQ",
-							"type": "string"
-						}
-					]
-				},
-				"method": "GET",
-				"header": [],
 				"url": {
 					"raw": "{{routes-microservice-url}}api/routes",
 					"host": [
@@ -109,28 +33,86 @@
 			"response": []
 		},
 		{
-			"name": "GetById (Admin, Manager, Driver)",
+			"name": "UpdateRoute (Admin, Manager)",
 			"request": {
-				"auth": {
-					"type": "bearer",
-					"bearer": [
-						{
-							"key": "token",
-							"value": "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjUiLCJlbWFpbCI6ImRyaXZlckBlbWFpbC5jb20iLCJodHRwOi8vc2NoZW1hcy5taWNyb3NvZnQuY29tL3dzLzIwMDgvMDYvaWRlbnRpdHkvY2xhaW1zL3JvbGUiOiJEcml2ZXIiLCJleHAiOjE3MDI1OTk5MjIsImlzcyI6IkF1dGguTWljcm9TZXJ2aWNlIiwiYXVkIjoiQXV0aC5NaWNyb1NlcnZpY2UifQ.Wi0f_FIL6ekq3h6fCuipzKMOKyTZbwcxTS9iOGkd6UIod9an_1tFcQLaWPSNzTjvW0NhhyfZ6NV2Y6QvBX7N90bnewIplvogC6yGUvGPzviJHtGwZE4OVnOvyGlx-BJUNAASq7-lW0ECU3IHZ37-Oi1kBbHhE3ApOKvLpYEPTx5GQrgt56-kk3NtywG_sIjxCPi_hOLgBqyxM4zzb_dBWyqGB1cl9HaCPtf90BfGfUKdmZZMxTDZuHaL6HU7WLTV1MRY_QyREKknOtkY0m-6EE0Ydl96XV17cn-bkMbRWTcZAdt5hnN14WMllfz9EA5ydX0U6kyAklR85pLUf-Aw6A",
-							"type": "string"
-						}
-					]
-				},
-				"method": "GET",
+				"method": "PATCH",
 				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"status\": \"inProgress\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
 				"url": {
-					"raw": "{{routes-microservice-url}}api/routes/6575a3c4aba2e4dd7f57aea0",
+					"raw": "{{routes-microservice-url}}api/routes/65d3ed1a007ac82d43a3f50b",
 					"host": [
 						"{{routes-microservice-url}}api"
 					],
 					"path": [
 						"routes",
-						"6575a3c4aba2e4dd7f57aea0"
+						"65d3ed1a007ac82d43a3f50b"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "GetAllRoutes (Admin, Manager, Driver)",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{routes-microservice-url}}api/routes?perPage=10&page=1",
+					"host": [
+						"{{routes-microservice-url}}api"
+					],
+					"path": [
+						"routes"
+					],
+					"query": [
+						{
+							"key": "perPage",
+							"value": "10",
+							"description": "Optional Parameter (Default -> 10; Max -> 100)"
+						},
+						{
+							"key": "page",
+							"value": "1",
+							"description": "Optional Parameter (Default -> 1)"
+						},
+						{
+							"key": "search",
+							"value": "West",
+							"description": "Optional Parameter (Search into start and end points)",
+							"disabled": true
+						},
+						{
+							"key": "status",
+							"value": "completed",
+							"description": "Optional Parameter (Ignores invalid inputs)",
+							"disabled": true
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "GetById (Admin, Manager, Driver)",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{routes-microservice-url}}api/routes/665ba7d3d681742968207993",
+					"host": [
+						"{{routes-microservice-url}}api"
+					],
+					"path": [
+						"routes",
+						"665ba7d3d681742968207993"
 					]
 				}
 			},
@@ -139,31 +121,52 @@
 		{
 			"name": "DeleteRoute  (Admin, Manager)",
 			"request": {
-				"auth": {
-					"type": "bearer",
-					"bearer": [
-						{
-							"key": "token",
-							"value": "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjIiLCJlbWFpbCI6Im1hbmFnZXJAZW1haWwuY29tIiwiaHR0cDovL3NjaGVtYXMubWljcm9zb2Z0LmNvbS93cy8yMDA4LzA2L2lkZW50aXR5L2NsYWltcy9yb2xlIjoiTWFuYWdlciIsImV4cCI6MTcwNzcwMTY4NSwiaXNzIjoiQXV0aC5NaWNyb1NlcnZpY2UiLCJhdWQiOiJBdXRoLk1pY3JvU2VydmljZSJ9.D4vpdhr4I6hILDFerYfC6KA0Cnozop3_4eUNI1vWcLJ37hkq90nyiONXKtiZss3kckM7G_WxnZX4Pq2wypVRUDMNj08pk5RyI_079-ToDtLKhFPUkoBv4W6YNpHqPE3dos83tJi8cJeI-1l76nk4Jt1OomclqPWePN2ut5ZtTI_9LdwlAc444ZyaTbFDUEhlC6b8FkUs_VEw4fF53MoPvmqK4NQ-Ckl_nw8VRNXXVE233E6AUxyh5KZi3yZxlUKSxO8PAfSPHDxqBnd8BWAwYt5TrMnlwUEdPyijNi_WT-30Vnx5z-tSXh6C2FHUlvSYrcRafidCl4-bsQJszTbseQ",
-							"type": "string"
-						}
-					]
-				},
 				"method": "DELETE",
 				"header": [],
 				"url": {
-					"raw": "{{routes-microservice-url}}api/routes/delete/65758b4994d038472adc9d02",
+					"raw": "{{routes-microservice-url}}api/routes/6624013cd482c4d81ef6b70a",
 					"host": [
 						"{{routes-microservice-url}}api"
 					],
 					"path": [
 						"routes",
-						"delete",
-						"65758b4994d038472adc9d02"
+						"6624013cd482c4d81ef6b70a"
 					]
 				}
 			},
 			"response": []
+		}
+	],
+	"auth": {
+		"type": "bearer",
+		"bearer": [
+			{
+				"key": "token",
+				"value": "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjUiLCJlbWFpbCI6ImExNDg1OEBhbHVub3MuaXBjYS5wdCIsImZpcnN0TmFtZSI6IkR1YXJ0ZSIsImxhc3ROYW1lIjoiRmVybmFuZGVzIiwicm9sZSI6IjMiLCJleHAiOjE3MTczNjg0MzksImlzcyI6IkF1dGguTWljcm9TZXJ2aWNlIiwiYXVkIjoiQXV0aC5NaWNyb1NlcnZpY2UifQ.JnITnms6JHbuJtMxz8scxFyFko9lN3QudWtha-hDji1VDsn2CNmvnzHTJ0-BcV34BuEDplk15F1y_HZucRCTHPK74sQQSkOZxe0uuguPr14NXLPBRm8oFMflcCwJiI8Eb4IxzfozR6tEMXY1be2ekMXKNDS0xr6EMQ8yvu5utEcD7Byf-9_JSOFapYVwhDqhjIs58_Zh13qfrDUvKkOx8BOgDWmi-fhoPdGzGg4awZiX6wdLcJUkf0HE-cqR2wgs-UpYEzpXx-ciRzz6PD8OzZ7YYHctlW62gg21VWAV2Fb7wHlRyLsFebU14TzgGqc9s9Zo7WtOnd2N0kxO8Frsuw",
+				"type": "string"
+			}
+		]
+	},
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
 		}
 	]
 }
