@@ -116,7 +116,7 @@ class RoutePersistence {
     return route;
   }
 
-  async getAllRoutes(perPage, page, search, status, user) {
+  async getAllRoutes(perPage, page, search, status, userId, vehicleId, user) {
     try {
       const maxPerPage = 100;
       const allowedStatus = ["pending", "inProgress", "completed", "cancelled"];
@@ -137,7 +137,12 @@ class RoutePersistence {
         status = undefined;
       }
 
-      const routes = await this.routeRepository.getAll(perPage, page, search, status, user);
+      userId = parseInt(userId, 10);
+      if (isNaN(userId) || userId < 1) {
+        userId = undefined;
+      }
+
+      const routes = await this.routeRepository.getAll(perPage, page, search, status, userId, vehicleId, user);
       return routes;
     } catch (error) {
       throw new Error(`Error getting all routes: ${error.message}`);
