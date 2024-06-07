@@ -20,7 +20,7 @@ class RouteRepository {
     return updatedRoute;
   }
 
-  async getAll(perPage, page, search, status, user) {
+  async getAll(perPage, page, search, status, userId, vehicleId, user) {
     try {
       // Exclude deleted routes
       let query = { isDeleted: false };
@@ -42,6 +42,16 @@ class RouteRepository {
 
       if (user && user["role"] === driverRole) {
         query.userId = user.id;
+      }
+
+      if (userId) {
+        query.userId = userId;
+      }
+
+      if (vehicleId) {
+        const escapedSearch = lodash.escapeRegExp(vehicleId);
+        const searchPattern = new RegExp(escapedSearch, "i");
+        query.vehicleId = searchPattern;
       }
 
       const options = {
