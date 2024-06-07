@@ -195,6 +195,16 @@ router.get("/routes/:id", authMiddleware(["1", "2", "3"]), (req, res) => routeCo
  *           type: string
  *           enum: [pending, inProgress, completed, cancelled]
  *         description: Status to filter routes
+ *       - in: query
+ *         name: userId
+ *         schema:
+ *           type: integer
+ *         description: User ID to filter routes
+ *       - in: query
+ *         name: vehicleId
+ *         schema:
+ *           type: string
+ *         description: Vehicle ID to filter routes
  *     responses:
  *       200:
  *         description: A list of routes.
