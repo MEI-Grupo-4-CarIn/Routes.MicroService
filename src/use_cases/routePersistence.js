@@ -59,48 +59,52 @@ class RoutePersistence {
   }
 
   async update(id, updatedRouteData) {
-    // Validate the data
-    const { error } = RouteValidator.validateUpdate(updatedRouteData);
-    if (error) {
-      throw new Error(`Invalid route data: ${error.details[0].message}.`);
+    try {
+      // Validate the data
+      const { error } = RouteValidator.validateUpdate(updatedRouteData);
+      if (error) {
+        throw new Error(`Invalid route data: ${error.details[0].message}.`);
+      }
+
+      const existingRouteData = await this.routeRepository.getById(id);
+      if (!existingRouteData) {
+        throw new NotFoundError("Route not found.");
+      }
+
+      if (updatedRouteData.vehicleId) {
+        // Check if vehicle exists
+        await this._checkVehicleExistsAsync(routeData.vehicleId);
+      }
+      if (updatedRouteData.avoidTolls !== undefined || updatedRouteData.avoidHighways !== undefined) {
+        // Recalculate route using the route calculation service
+        const routeOptions = {
+          avoidTolls: updatedRouteData.avoidTolls ?? existingRouteData.avoidTolls,
+          avoidHighways: updatedRouteData.avoidHighways ?? existingRouteData.avoidHighways,
+        };
+        const route = await this.routeCalculationService.calculateRoute(
+          [existingRouteData.startPoint.coordinates, existingRouteData.endPoint.coordinates],
+          routeOptions
+        );
+
+        updatedRouteData.distance = route.distance;
+        updatedRouteData.duration = route.duration;
+        updatedRouteData.estimatedEndDate = this._calculateEndDate(updatedRouteData.startDate, updatedRouteData.duration);
+      }
+
+      const mergedRouteData = { ...existingRouteData, ...updatedRouteData };
+      const route = new RouteEntity(mergedRouteData);
+
+      const validation = await route.validator();
+      if (!validation.isValid) {
+        throw new Error(validation.errors.join("\n"));
+      }
+
+      await this._validateUserAndVehicleAvailability(mergedRouteData);
+
+      return this.routeRepository.update(id, route);
+    } catch (error) {
+      throw new Error(`Error updating route: ${error.message}`);
     }
-
-    const existingRouteData = await this.routeRepository.getById(id);
-    if (!existingRouteData) {
-      throw new NotFoundError("Route not found.");
-    }
-
-    if (updatedRouteData.vehicleId) {
-      // Check if vehicle exists
-      await this._checkVehicleExistsAsync(routeData.vehicleId);
-    }
-    if (updatedRouteData.avoidTolls !== undefined || updatedRouteData.avoidHighways !== undefined) {
-      // Recalculate route using the route calculation service
-      const routeOptions = {
-        avoidTolls: updatedRouteData.avoidTolls ?? existingRouteData.avoidTolls,
-        avoidHighways: updatedRouteData.avoidHighways ?? existingRouteData.avoidHighways,
-      };
-      const route = await this.routeCalculationService.calculateRoute(
-        [existingRouteData.startPoint.coordinates, existingRouteData.endPoint.coordinates],
-        routeOptions
-      );
-
-      updatedRouteData.distance = route.distance;
-      updatedRouteData.duration = route.duration;
-      updatedRouteData.estimatedEndDate = this._calculateEndDate(updatedRouteData.startDate, updatedRouteData.duration);
-    }
-
-    const mergedRouteData = { ...existingRouteData, ...updatedRouteData };
-    const route = new RouteEntity(mergedRouteData);
-
-    const validation = await route.validator();
-    if (!validation.isValid) {
-      throw new Error(validation.errors.join("\n"));
-    }
-
-    await this._validateUserAndVehicleAvailability(mergedRouteData);
-
-    return this.routeRepository.update(id, route);
   }
 
   async getById(id, user) {
