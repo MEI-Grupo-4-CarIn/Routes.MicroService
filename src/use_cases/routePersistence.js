@@ -88,7 +88,10 @@ class RoutePersistence {
 
         updatedRouteData.distance = route.distance;
         updatedRouteData.duration = route.duration;
-        updatedRouteData.estimatedEndDate = this._calculateEndDate(updatedRouteData.startDate, updatedRouteData.duration);
+        updatedRouteData.estimatedEndDate = this._calculateEndDate(
+          updatedRouteData.startDate ?? existingRouteData.startDate,
+          updatedRouteData.duration
+        );
       }
 
       const mergedRouteData = { ...existingRouteData, ...updatedRouteData };
