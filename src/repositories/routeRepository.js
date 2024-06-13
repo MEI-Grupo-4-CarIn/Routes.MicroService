@@ -60,8 +60,9 @@ class RouteRepository {
         sort: { createdAt: -1 },
       };
 
-      const allRoutes = await RouteModel.find(query, null, options).exec();
-      return allRoutes;
+      const [allRoutes, totalCount] = await Promise.all([RouteModel.find(query, null, options).exec(), RouteModel.countDocuments(query).exec()]);
+
+      return { allRoutes, totalCount };
     } catch (error) {
       throw new Error(`Error getting all routes from the repository: ${error.message}`);
     }

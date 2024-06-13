@@ -149,8 +149,18 @@ class RoutePersistence {
         userId = undefined;
       }
 
-      const routes = await this.routeRepository.getAll(perPage, page, search, status, userId, vehicleId, user);
-      return routes;
+      const { routes, totalCount } = await this.routeRepository.getAll(perPage, page, search, status, userId, vehicleId, user);
+      const totalPages = Math.ceil(totalCount / perPage);
+
+      return {
+        data: routes,
+        meta: {
+          totalItems: totalCount,
+          totalPages: totalPages,
+          currentPage: page,
+          itemsPerPage: perPage,
+        },
+      };
     } catch (error) {
       throw new Error(`Error getting all routes: ${error.message}`);
     }
