@@ -149,11 +149,11 @@ class RoutePersistence {
         userId = undefined;
       }
 
-      const { routes, totalCount } = await this.routeRepository.getAll(perPage, page, search, status, userId, vehicleId, user);
+      const { allRoutes, totalCount } = await this.routeRepository.getAll(perPage, page, search, status, userId, vehicleId, user);
       const totalPages = Math.ceil(totalCount / perPage);
 
       return {
-        data: routes,
+        data: allRoutes,
         meta: {
           totalItems: totalCount,
           totalPages: totalPages,
