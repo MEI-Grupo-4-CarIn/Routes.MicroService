@@ -2,6 +2,7 @@ const amqp = require("amqplib/callback_api");
 const RoutePersistence = require("../use_cases/routePersistence");
 const Logger = require("../frameworks/logging/logger");
 
+let channel = null;
 const routePersistence = new RoutePersistence();
 
 function handleMessage(msg) {
@@ -26,6 +27,7 @@ function subscribeToQueue(queueName) {
       if (error1) {
         throw error1;
       }
+      channel = ch;
       ch.assertQueue(queueName, { durable: true });
       ch.consume(queueName, handleMessage, { noAck: true });
       console.log(`Subscribed to queue: ${queueName}`);
@@ -33,6 +35,18 @@ function subscribeToQueue(queueName) {
   });
 }
 
+function publishToQueue(queue, message) {
+  if (!channel) {
+    console.error("RabbitMQ channel is not initialized. Cannot publish message.");
+    return;
+  }
+  channel.assertQueue(queue, {
+    durable: true,
+  });
+  channel.sendToQueue(queue, Buffer.from(message));
+}
+
 module.exports = {
   subscribeToQueue,
+  publishToQueue,
 };
