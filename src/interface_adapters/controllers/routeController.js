@@ -1,6 +1,7 @@
 const RoutePersistence = require("../../use_cases/routePersistence");
 const NotFoundError = require("../../utils/notFoundError");
 const Logger = require("../../frameworks/logging/logger");
+const { publishToQueue } = require("../../frameworks/rabbitmq");
 
 class RouteController {
   constructor() {
@@ -13,6 +14,15 @@ class RouteController {
       Logger.info(
         `Route created by the user '${req.user.email}' with success! Info: routeId: '${route.id}' for userId: '${route.userId}' and vehicleId: '${route.vehicleId}'.`
       );
+
+      // Publish a notification message to the notificationQueue
+      const notificationMessage = JSON.stringify({
+        userId: route.userId,
+        title: "New Route Created",
+        body: `A new route for you has been created with the ID ${route.id}.`,
+      });
+      publishToQueue("notificationQueue", notificationMessage);
+
       res.status(201).json(route);
     } catch (error) {
       Logger.error(`Error creating route:`, error);
