@@ -73,7 +73,7 @@ class RoutePersistence {
 
       if (updatedRouteData.vehicleId) {
         // Check if vehicle exists
-        await this._checkVehicleExistsAsync(routeData.vehicleId);
+        await this._checkVehicleExistsAsync(updatedRouteData.vehicleId);
       }
       if (updatedRouteData.avoidTolls !== undefined || updatedRouteData.avoidHighways !== undefined) {
         // Recalculate route using the route calculation service
